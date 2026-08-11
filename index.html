@@ -5,17 +5,20 @@
     --bg: #FBF7FF; --surface: #FFFFFF; --ink: #241E3D; --ink-soft: #756E93; --rule: #E9E1F9;
     --teal: #00C2A8; --coral: #FF6B5B; --yellow: #E8A100; --purple: #8B5CF6; --pink: #FF4FA3;
     --shadow: 0 4px 14px rgba(139,92,246,0.10);
+    --r1: #EF4444; --r2: #F97316; --r3: #EAB308; --r4: #22C55E; --r5: #3B82F6; --r6: #6366F1; --r7: #A855F7;
   }
   :root[data-theme="dark"] {
     --bg: #17122B; --surface: #241D3F; --ink: #F3EFFF; --ink-soft: #B3A9D4; --rule: #3A2F5C;
     --teal: #2DE8CC; --coral: #FF8B7D; --yellow: #FFD166; --purple: #A78BFA; --pink: #FF7AC0;
     --shadow: 0 4px 16px rgba(0,0,0,0.35);
+    --r1: #FF6B6B; --r2: #FFA24D; --r3: #FFD93D; --r4: #6EE7A0; --r5: #6DA8FF; --r6: #9C9BFF; --r7: #D19CFF;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #17122B; --surface: #241D3F; --ink: #F3EFFF; --ink-soft: #B3A9D4; --rule: #3A2F5C;
       --teal: #2DE8CC; --coral: #FF8B7D; --yellow: #FFD166; --purple: #A78BFA; --pink: #FF7AC0;
       --shadow: 0 4px 16px rgba(0,0,0,0.35);
+      --r1: #FF6B6B; --r2: #FFA24D; --r3: #FFD93D; --r4: #6EE7A0; --r5: #6DA8FF; --r6: #9C9BFF; --r7: #D19CFF;
     }
   }
   * { box-sizing: border-box; }
@@ -25,9 +28,10 @@
   .display { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 700; }
   .mono { font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
   button, select, input, textarea { font-family: inherit; font-size: 14px; }
+  a { color: var(--purple); }
 
   .topbar { display: flex; align-items: center; justify-content: space-between; padding: 24px 0 10px; gap: 12px; flex-wrap: wrap; }
-  .topbar h1 { font-size: clamp(26px, 5vw, 34px); margin: 0; background: linear-gradient(90deg, var(--teal), var(--purple) 55%, var(--coral)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .topbar h1 { font-size: clamp(26px, 5vw, 34px); margin: 0; background: linear-gradient(90deg, var(--r1), var(--r3), var(--r4), var(--r5), var(--r7)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .topbar .sub { color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
   .whoami { display: flex; align-items: center; gap: 8px; }
   .whoami select { padding: 8px 12px; border-radius: 999px; border: 2px solid var(--purple); background: var(--surface); color: var(--purple); font-weight: 700; }
@@ -36,9 +40,16 @@
   .mode-pill.preview { background: color-mix(in srgb, var(--yellow) 22%, transparent); color: var(--yellow); }
 
   .tabs-nav { display: flex; gap: 6px; margin: 18px 0 26px; overflow-x: auto; padding-bottom: 2px; }
-  .tab-btn { font-weight: 700; font-size: 14px; color: var(--ink-soft); border: 2px solid transparent; background: color-mix(in srgb, var(--purple) 6%, transparent); cursor: pointer; border-radius: 999px; padding: 9px 16px; white-space: nowrap; transition: all 0.15s ease; }
+  .tab-btn { font-weight: 700; font-size: 13.5px; color: var(--ink-soft); border: 2px solid transparent; background: color-mix(in srgb, var(--purple) 6%, transparent); cursor: pointer; border-radius: 999px; padding: 9px 15px; white-space: nowrap; transition: all 0.15s ease; }
   .tab-btn:hover { color: var(--purple); }
-  .tab-btn.active { color: #fff; background: linear-gradient(90deg, var(--purple), var(--pink)); border-color: transparent; box-shadow: var(--shadow); }
+  .tab-btn.active { color: #fff; border-color: transparent; box-shadow: var(--shadow); }
+  .tab-btn[data-tab="overview"].active { background: linear-gradient(90deg, var(--r1), var(--r2)); }
+  .tab-btn[data-tab="chores"].active { background: linear-gradient(90deg, var(--r2), var(--r3)); }
+  .tab-btn[data-tab="refresh"].active { background: linear-gradient(90deg, var(--r3), var(--r4)); color: #241E3D; }
+  .tab-btn[data-tab="management"].active { background: linear-gradient(90deg, var(--r4), var(--r5)); }
+  .tab-btn[data-tab="communal"].active { background: linear-gradient(90deg, var(--r5), var(--r6)); }
+  .tab-btn[data-tab="finances"].active { background: linear-gradient(90deg, var(--r6), var(--r7)); }
+  .tab-btn[data-tab="manage"].active { background: linear-gradient(90deg, var(--r7), var(--pink)); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
@@ -73,19 +84,20 @@
   .badge.person-kyle { background: color-mix(in srgb, var(--coral) 20%, transparent); color: var(--coral); }
   .badge.person-matt { background: color-mix(in srgb, var(--teal) 20%, transparent); color: var(--teal); }
   .badge.person-everyone { background: color-mix(in srgb, var(--purple) 20%, transparent); color: var(--purple); }
-  .badge.status-notstarted { background: color-mix(in srgb, var(--ink-soft) 18%, transparent); color: var(--ink-soft); }
-  .badge.status-inprogress { background: color-mix(in srgb, var(--yellow) 22%, transparent); color: var(--yellow); }
-  .badge.status-done, .badge.status-resolved { background: color-mix(in srgb, var(--teal) 20%, transparent); color: var(--teal); }
+  .badge.status-notstarted, .badge.status-open { background: color-mix(in srgb, var(--ink-soft) 18%, transparent); color: var(--ink-soft); }
+  .badge.status-inprogress, .badge.status-contactedmanagement { background: color-mix(in srgb, var(--yellow) 22%, transparent); color: var(--yellow); }
+  .badge.status-done, .badge.status-resolved, .badge.status-complete { background: color-mix(in srgb, var(--teal) 20%, transparent); color: var(--teal); }
   .badge.status-submitted { background: color-mix(in srgb, var(--pink) 18%, transparent); color: var(--pink); }
   .badge.carryover { background: color-mix(in srgb, var(--coral) 22%, transparent); color: var(--coral); }
   .ic-meta { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
-  .ic-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .ic-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
   .btn { font-weight: 700; font-size: 12.5px; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--rule); background: var(--bg); color: var(--ink); cursor: pointer; }
   .btn:hover { border-color: var(--purple); color: var(--purple); }
   .btn.primary { background: linear-gradient(90deg, var(--teal), var(--purple)); color: #fff; border-color: transparent; }
   .btn.primary:hover { opacity: 0.9; color: #fff; }
   .btn.kyle { background: color-mix(in srgb, var(--coral) 16%, var(--surface)); border-color: var(--coral); color: var(--coral); }
   .btn.matt { background: color-mix(in srgb, var(--teal) 16%, var(--surface)); border-color: var(--teal); color: var(--teal); }
+  .btn.sm { padding: 5px 10px; font-size: 11px; }
 
   .checklist { list-style: none; margin: 10px 0 0; padding: 10px 0 0; border-top: 1px dashed var(--rule); }
   .checklist li { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13.5px; }
@@ -104,20 +116,21 @@
   .fin-summary td.num { font-family: "SF Mono", ui-monospace, Menlo, monospace; text-align: right; }
   .fin-summary tr.total td { font-weight: 800; border-top: 2px solid var(--purple); border-bottom: none; }
 
-  .month-block { margin-bottom: 28px; }
+  .month-block { margin-bottom: 12px; }
   .month-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-  .month-head .mh-pill { font-family: Georgia, serif; font-weight: 700; font-size: 20px; padding: 7px 18px; border-radius: 999px; color: #fff; background: linear-gradient(90deg, var(--purple), var(--pink)); }
-  .month-block.past .mh-pill { background: linear-gradient(90deg, var(--coral), var(--yellow)); }
-  .month-head .mh-note { font-size: 12.5px; color: var(--ink-soft); }
+  .month-head .mh-pill { font-family: Georgia, serif; font-weight: 700; font-size: 20px; padding: 7px 18px; border-radius: 999px; color: #fff; background: linear-gradient(90deg, var(--r2), var(--r3)); }
+  .cadence-section { margin-bottom: 26px; }
+  .cadence-label { font-family: Georgia, serif; font-weight: 700; font-size: 15px; margin: 0 0 12px; display: inline-block; padding: 4px 14px; border-radius: 999px; background: color-mix(in srgb, var(--r2) 16%, transparent); color: var(--r2); }
   .room-group { margin-bottom: 22px; }
   .room-group h4 { font-family: Georgia, serif; font-size: 16px; margin: 0 0 10px; color: var(--purple); }
   .room-rows { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-  .month-row { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 2px solid var(--rule); border-radius: 14px; padding: 12px 16px; }
-  .month-row input { width: 20px; height: 20px; accent-color: var(--teal); flex-shrink: 0; }
+  .month-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 2px solid var(--rule); border-radius: 14px; padding: 12px 14px; }
+  .month-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--teal); flex-shrink: 0; }
   .month-row .mr-name { font-weight: 700; font-size: 14.5px; }
   .month-row .mr-name.done { text-decoration: line-through; color: var(--ink-soft); }
   .month-row .mr-meta { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
-  .month-row .mr-main { flex: 1; }
+  .month-row .mr-main { flex: 1; min-width: 0; }
+  .owner-select { font-size: 11px; font-weight: 700; padding: 4px 6px; border-radius: 8px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); flex-shrink: 0; }
 
   @media (max-width: 640px) {
     .page { padding: 0 14px 90px; }
@@ -138,21 +151,43 @@
   .empty { color: var(--ink-soft); font-size: 13.5px; font-style: italic; padding: 8px 0; }
   .banner { border-radius: 14px; padding: 11px 15px; font-size: 13px; margin-bottom: 18px; border: 2px solid; }
   .banner.preview { background: color-mix(in srgb, var(--yellow) 10%, var(--surface)); border-color: color-mix(in srgb, var(--yellow) 45%, var(--rule)); color: var(--ink); }
+  .banner.info { background: color-mix(in srgb, var(--purple) 8%, var(--surface)); border-color: color-mix(in srgb, var(--purple) 30%, var(--rule)); color: var(--ink); }
+  .portal-box { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: linear-gradient(90deg, color-mix(in srgb, var(--r4) 10%, var(--surface)), color-mix(in srgb, var(--r5) 10%, var(--surface))); border: 2px solid color-mix(in srgb, var(--r5) 30%, var(--rule)); border-radius: 16px; padding: 16px 20px; margin-bottom: 22px; }
+  .portal-box .pb-text { font-size: 13.5px; color: var(--ink-soft); }
   footer { border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 30px; font-size: 12px; color: var(--ink-soft); }
+
+  .balance-banner { border-radius: 16px; padding: 16px 20px; margin-bottom: 22px; background: linear-gradient(90deg, color-mix(in srgb, var(--r6) 10%, var(--surface)), color-mix(in srgb, var(--r7) 10%, var(--surface))); border: 2px solid color-mix(in srgb, var(--r7) 30%, var(--rule)); }
+  .balance-banner .bb-amount { font-family: Georgia, serif; font-weight: 700; font-size: 22px; }
+  .period-card { background: var(--surface); border: 2px solid var(--rule); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; }
+  .period-card.current { border-color: var(--purple); box-shadow: var(--shadow); }
+  .period-card .pc-head { font-family: Georgia, serif; font-weight: 700; font-size: 18px; margin-bottom: 10px; }
+  .period-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px dotted var(--rule); font-size: 13.5px; }
+  .period-row:first-of-type { border-top: none; }
+  .pr-check { width: 16px; height: 16px; flex-shrink: 0; }
+  .pr-check.yes { color: var(--teal); }
+  .pr-check.no { color: var(--rule); }
+  .pr-label { flex: 1; }
+  .pr-amt { font-family: "SF Mono", ui-monospace, Menlo, monospace; color: var(--ink-soft); }
+
+  .overview-section { margin-bottom: 26px; }
+  .overview-section h3 { font-family: Georgia, serif; font-size: 17px; margin: 0 0 10px; }
+  .ov-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 2px solid var(--rule); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; }
+  .ov-row .ov-label { flex: 1; font-size: 13.5px; }
+  .cadence-input { width: 60px; padding: 4px 6px; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); font-size: 12px; }
 </style>
 
 <div class="page">
   <div class="topbar">
     <div>
       <h1 class="display">🏠 Apartment HQ</h1>
-      <div class="sub">Kyle &amp; Matt — chores, building management, shopping, finances</div>
+      <div class="sub">Kyle &amp; Matt — everything about the apartment, in one spot</div>
     </div>
     <div class="whoami">
       <span id="modePill" class="mode-pill preview">Preview mode</span>
       <select id="viewSelect">
-        <option value="Both">Kyle &amp; Matt Chores</option>
-        <option value="Kyle">Kyle Chores</option>
-        <option value="Matt">Matt Chores</option>
+        <option value="Both">Kyle &amp; Matt</option>
+        <option value="Kyle">Kyle</option>
+        <option value="Matt">Matt</option>
       </select>
     </div>
   </div>
@@ -162,18 +197,26 @@
   </div>
 
   <div class="tabs-nav">
-    <button class="tab-btn active" data-tab="chores">🧹 Ongoing Chores</button>
-    <button class="tab-btn" data-tab="refresh">🛋️ 2026 Apartment Refresh</button>
-    <button class="tab-btn" data-tab="management">🏢 Building Management</button>
-    <button class="tab-btn" data-tab="communal">🛒 Communal Shopping List</button>
-    <button class="tab-btn" data-tab="finances">💰 Apartment Finances</button>
-    <button class="tab-btn" data-tab="manage">➕ Manage Chores</button>
+    <button class="tab-btn active" data-tab="overview">🔴 Overview</button>
+    <button class="tab-btn" data-tab="chores">🟠 Ongoing Chores</button>
+    <button class="tab-btn" data-tab="refresh">🟡 2026 Apartment Refresh</button>
+    <button class="tab-btn" data-tab="management">🟢 Building Management</button>
+    <button class="tab-btn" data-tab="communal">🔵 Communal Shopping List</button>
+    <button class="tab-btn" data-tab="finances">🟣 Apartment Finances</button>
+    <button class="tab-btn" data-tab="manage">💜 Manage Apartment</button>
+  </div>
+
+  <!-- ===================== OVERVIEW ===================== -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="section-head"><h2 class="display">Overview</h2></div>
+    <p class="section-sub">Everything still open, in one place. Use the picker up top to see just your stuff, just Matt's, or everything. Check something off here and it clears itself out.</p>
+    <div id="overviewContent"></div>
   </div>
 
   <!-- ===================== ONGOING CHORES ===================== -->
-  <div class="tab-panel active" id="tab-chores">
+  <div class="tab-panel" id="tab-chores">
     <div class="section-head"><h2 class="display">Ongoing Chores</h2></div>
-    <p class="section-sub">This month's chores, grouped by room. Check them off as you go — add or edit chores from the Manage Chores tab.</p>
+    <p class="section-sub">This month's chores, split into weekly and monthly, grouped by room. Change who owns a chore right here with the dropdown.</p>
     <div id="monthlyChores"></div>
     <div id="oneOffChores"></div>
   </div>
@@ -181,78 +224,81 @@
   <!-- ===================== 2026 APARTMENT REFRESH ===================== -->
   <div class="tab-panel" id="tab-refresh">
     <div class="section-head"><h2 class="display">2026 Apartment Refresh</h2></div>
-    <p class="section-sub">The big one — furniture swap, wallpaper, the whole living room reset.</p>
+    <p class="section-sub">The big one — furniture swap, wallpaper, the whole living room reset. Organized by what you're selling, buying, and just need to get done.</p>
     <div id="refreshFeature"></div>
   </div>
 
+  <!-- ===================== BUILDING MANAGEMENT ===================== -->
   <div class="tab-panel" id="tab-management">
     <div class="section-head"><h2 class="display">Building Management</h2></div>
     <p class="section-sub">Anything that needs the landlord or property management — tracked separately from chores.</p>
-    <div id="managementList" class="card-grid"></div>
-    <div class="section-group">
-      <h4>Log a new item</h4>
-      <div class="add-form">
-        <div class="full"><label>Name</label><input id="mgmt-name" placeholder="e.g. Fix leaking faucet"></div>
-        <div><label>Section</label><select id="mgmt-section"></select></div>
-        <div><label>Contacted Management?</label><select id="mgmt-contacted"><option>No</option><option>Yes</option></select></div>
-        <div><label>Contacted By</label><select id="mgmt-by"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
-        <div><label>Method</label><select id="mgmt-method"><option>Online Portal</option><option>Text</option></select></div>
-        <div class="full"><label>Notes</label><input id="mgmt-notes" placeholder="Optional"></div>
-        <div><button class="btn primary" onclick="addManagementItem()">Log Item</button></div>
-      </div>
+    <div class="portal-box">
+      <div class="pb-text">Submit new requests directly through the resident portal.</div>
+      <a class="btn primary" href="https://portal.connectresident.com/#/dashboard" target="_blank" rel="noopener">Open Resident Portal →</a>
     </div>
+    <div id="managementList" class="card-grid"></div>
   </div>
 
   <!-- ===================== COMMUNAL SHOPPING LIST ===================== -->
   <div class="tab-panel" id="tab-communal">
     <div class="section-head"><h2 class="display">Communal Shopping List</h2></div>
-    <p class="section-sub">Shared consumables — paper towels, toilet paper, cleaning products, trash bags. Next-due is estimated from your typical buying cadence.</p>
+    <p class="section-sub">Shared consumables. Cadence is editable right on each card — adjust it anytime you find you're buying something more or less often. Logging a price here also adds it to Apartment Finances.</p>
+    <div class="banner info"><b>Note:</b> I don't have access to your Instacart account in this session, so cadence estimates come only from what's logged here — not pulled automatically from purchase history.</div>
     <div id="communalList" class="card-grid"></div>
+  </div>
+
+  <!-- ===================== APARTMENT FINANCES ===================== -->
+  <div class="tab-panel" id="tab-finances">
+    <div class="section-head"><h2 class="display">Apartment Finances</h2></div>
+    <p class="section-sub">Newest month on top. Rent is paid separately by each of you; shared bills like WiFi and electricity get split 50/50 based on who fronted them.</p>
+    <div id="balanceBanner"></div>
+    <div id="financePeriods"></div>
     <div class="section-group">
-      <h4>Add a communal item</h4>
+      <h4>Log a payment</h4>
+      <div class="add-form">
+        <div><label>Bill</label><select id="pay-bill" onchange="onBillChange()"></select></div>
+        <div><label>Amount</label><input id="pay-amount" type="number" step="0.01" placeholder="0.00"></div>
+        <div><label>Paid By</label><select id="pay-by"><option>Kyle</option><option>Matt</option></select></div>
+        <div><label>Split</label><select id="pay-split"><option value="Shared 50/50">Shared 50/50 (they owe half)</option><option value="Own Share">Own Share (just my portion)</option></select></div>
+        <div><label>Date</label><input id="pay-date" type="date"></div>
+        <div><label>Period</label><input id="pay-period" placeholder="e.g. 2026-09"></div>
+        <div><button class="btn primary" onclick="addPayment()">Log Payment</button></div>
+      </div>
+    </div>
+    <div class="section-group">
+      <h4>Full Payment History</h4>
+      <ul class="payment-log" id="paymentLog"></ul>
+    </div>
+  </div>
+
+  <!-- ===================== MANAGE APARTMENT ===================== -->
+  <div class="tab-panel" id="tab-manage">
+    <div class="section-head"><h2 class="display">Manage Apartment</h2></div>
+    <p class="section-sub">The source list for chores and the shopping list — add, retire, and reassign things here, and the changes show up everywhere else right away.</p>
+
+    <div class="section-group">
+      <h4>All Chores</h4>
+      <div class="fin-summary-wrap"><table class="fin-summary" id="choreRefTable"></table></div>
+      <div class="add-form">
+        <div class="full"><label>Name</label><input id="chore-name" placeholder="e.g. Wipe down baseboards"></div>
+        <div><label>Type</label><select id="chore-type"><option>Recurring</option><option>One-off</option></select></div>
+        <div><label>Section</label><select id="chore-section"></select></div>
+        <div><label>Owner</label><select id="chore-assigned"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
+        <div><label>Frequency</label><select id="chore-cadence"><option>Weekly</option><option>Biweekly</option><option>Monthly</option><option>Quarterly</option><option>One-time</option></select></div>
+        <div class="full"><label>Notes</label><input id="chore-notes" placeholder="Optional"></div>
+        <div><button class="btn primary" onclick="addChore()">Add Chore</button></div>
+      </div>
+    </div>
+
+    <div class="section-group">
+      <h4>All Communal Items</h4>
+      <div class="fin-summary-wrap"><table class="fin-summary" id="communalRefTable"></table></div>
       <div class="add-form">
         <div class="full"><label>Item</label><input id="comm-name" placeholder="e.g. Dish Soap"></div>
         <div><label>Section</label><select id="comm-section"></select></div>
         <div><label>Typical Cadence (days)</label><input id="comm-cadence" type="number" placeholder="e.g. 21"></div>
         <div><button class="btn primary" onclick="addCommunalItem()">Add Item</button></div>
       </div>
-    </div>
-  </div>
-
-  <!-- ===================== APARTMENT FINANCES ===================== -->
-  <div class="tab-panel" id="tab-finances">
-    <div class="section-head"><h2 class="display">Apartment Finances</h2></div>
-    <p class="section-sub">Recurring bills and the running Kyle-vs-Matt total, computed live from every payment logged below.</p>
-    <div class="fin-summary-wrap"><table class="fin-summary" id="finSummaryTable"></table></div>
-    <div class="section-group">
-      <h4>Log a payment</h4>
-      <div class="add-form">
-        <div><label>Bill</label><select id="pay-bill"></select></div>
-        <div><label>Amount</label><input id="pay-amount" type="number" step="0.01" placeholder="0.00"></div>
-        <div><label>Paid By</label><select id="pay-by"><option>Kyle</option><option>Matt</option></select></div>
-        <div><label>Date</label><input id="pay-date" type="date"></div>
-        <div><label>Period</label><input id="pay-period" placeholder="e.g. 2026-08"></div>
-        <div><button class="btn primary" onclick="addPayment()">Log Payment</button></div>
-      </div>
-    </div>
-    <div class="section-group">
-      <h4>Payment History</h4>
-      <ul class="payment-log" id="paymentLog"></ul>
-    </div>
-  </div>
-
-  <!-- ===================== MANAGE CHORES ===================== -->
-  <div class="tab-panel" id="tab-manage">
-    <div class="section-head"><h2 class="display">Manage Chores</h2></div>
-    <p class="section-sub">Add new chores here — set the room, owner, and how often it happens. New chores show up on the Ongoing Chores tab right away.</p>
-    <div class="add-form">
-      <div class="full"><label>Name</label><input id="chore-name" placeholder="e.g. Wipe down baseboards"></div>
-      <div><label>Type</label><select id="chore-type"><option>Recurring</option><option>One-off</option></select></div>
-      <div><label>Section</label><select id="chore-section"></select></div>
-      <div><label>Owner</label><select id="chore-assigned"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
-      <div><label>Frequency</label><select id="chore-cadence"><option>Weekly</option><option>Biweekly</option><option>Monthly</option><option>Quarterly</option><option>One-time</option></select></div>
-      <div class="full"><label>Notes</label><input id="chore-notes" placeholder="Optional"></div>
-      <div><button class="btn primary" onclick="addChore()">Add Chore</button></div>
     </div>
   </div>
 
@@ -263,50 +309,56 @@
 
 <script>
 // ============================== CONFIG ==============================
-// Paste your deployed Apps Script /exec URL here to go live. Leave blank for preview mode.
 const API_URL = "https://script.google.com/macros/s/AKfycbwpzAAMuvj2kGWSZRwo2Q8CPPgngH-uEdHZpxPbB21-UgC374UjHyr7Voz-SrpEknTH/exec";
 const SECTIONS = ["Living Room", "Foyer", "Bathroom", "Kitchen", "Backyard", "Whole Apartment"];
-const REFRESH_CHORE_ID = "6"; // "2026 Apartment Refresh" — matches Chores.ID in the seed data
+const REFRESH_CHORE_ID = "6";
+const REFRESH_CATEGORIES = ["Sell", "Buy", "Complete"];
 
 // ============================== SEED / PREVIEW DATA ==============================
 const SEED = {
   Chores: [
     {ID:"4",Name:"Deep Clean Fridge",Type:"Recurring",Section:"Kitchen",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"6",Name:"2026 Apartment Refresh",Type:"One-off",Section:"Living Room",AssignedTo:"Everyone",Cadence:"One-time",TimelineStart:"TBD",TimelineDue:"TBD",Status:"In Progress",Notes:"Furniture swap + wallpaper — see checklist for the full plan and goal dates"},
+    {ID:"6",Name:"2026 Apartment Refresh",Type:"One-off",Section:"Living Room",AssignedTo:"Everyone",Cadence:"One-time",TimelineStart:"TBD",TimelineDue:"TBD",Status:"In Progress",Notes:""},
     {ID:"7",Name:"Reorganize Tupperware",Type:"Recurring",Section:"Kitchen",AssignedTo:"Kyle",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"8",Name:"Scrub Counters and Oven",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"10",Name:"Clean Air Fryer",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"8",Name:"Wipe Down Counters",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"10",Name:"Clean Air Fryer",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"11",Name:"Vacuum and Mop",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"12",Name:"Clean Out Grocery Bag Cabinet",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"13",Name:"Take Out Trash & Recycling",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"14",Name:"Wipe Down Stovetop & Backsplash",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"15",Name:"Deep Clean Shower",Type:"Recurring",Section:"Bathroom",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"16",Name:"Deep Clean Toilet",Type:"Recurring",Section:"Bathroom",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"17",Name:"Mop Floors",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"18",Name:"Scrub Sink",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"19",Name:"Clean Mirror",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"20",Name:"Restock Toilet Paper & Toiletries Check",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"20",Name:"Restock Hand Soap",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"21",Name:"Vacuum",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"22",Name:"Mop",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"22",Name:"Mop",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"23",Name:"Dust",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"24",Name:"Wipe Down All Surfaces",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"25",Name:"Straighten Pillows & Throws",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"26",Name:"Wipe Down TV & Electronics",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"27",Name:"Sweep Leaves",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"28",Name:"Clean Table",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"29",Name:"Clean Grill",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"30",Name:"Wipe Down Smaller Tables",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"31",Name:"Check/Pull Weeds",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"32",Name:"Wipe Down Table",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"33",Name:"Wipe Down Bar",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"34",Name:"Clean Microwave",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"35",Name:"Reorganize Spice Cabinet",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"40",Name:"Wash Hand Towels",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"41",Name:"Wash Hand Towels",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
   ],
   ManagementItems: [],
   ChecklistItems: [
-    {ID:"5",ParentType:"Chore",ParentID:"6",ItemText:"Sell old couch, coffee table, TV stand",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"1"},
-    {ID:"6",ParentType:"Chore",ParentID:"6",ItemText:"Buy new couch",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"2"},
-    {ID:"7",ParentType:"Chore",ParentID:"6",ItemText:"Buy new coffee table",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"3"},
-    {ID:"8",ParentType:"Chore",ParentID:"6",ItemText:"Buy new TV stand",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"4"},
-    {ID:"9",ParentType:"Chore",ParentID:"6",ItemText:"Remove old curtains",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"5"},
-    {ID:"10",ParentType:"Chore",ParentID:"6",ItemText:"Redo wallpaper",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"6"},
-    {ID:"11",ParentType:"Chore",ParentID:"6",ItemText:"Move gym equipment out of living room",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"7"},
+    {ID:"6",ParentType:"Chore",ParentID:"6",ItemText:"Buy Couch",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"2",Category:"Buy"},
+    {ID:"7",ParentType:"Chore",ParentID:"6",ItemText:"Buy Coffee Table",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"3",Category:"Buy"},
+    {ID:"8",ParentType:"Chore",ParentID:"6",ItemText:"Buy TV Stand",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"4",Category:"Buy"},
+    {ID:"10",ParentType:"Chore",ParentID:"6",ItemText:"Buy Wallpaper",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"6",Category:"Buy"},
+    {ID:"11",ParentType:"Chore",ParentID:"6",ItemText:"Move gym equipment out of living room",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"7",Category:"Complete"},
+    {ID:"12",ParentType:"Chore",ParentID:"6",ItemText:"Sell Couch",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"1",Category:"Sell"},
+    {ID:"13",ParentType:"Chore",ParentID:"6",ItemText:"Sell Coffee Table",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"2",Category:"Sell"},
+    {ID:"14",ParentType:"Chore",ParentID:"6",ItemText:"Sell TV Stand",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"3",Category:"Sell"},
+    {ID:"15",ParentType:"Chore",ParentID:"6",ItemText:"Apply Wallpaper",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"11",Category:"Complete"},
   ],
   History: [],
   CommunalItems: [
@@ -317,7 +369,7 @@ const SEED = {
   ],
   CommunalItemHistory: [],
   Bills: [
-    {ID:"1",BillName:"Rent",TypicalAmount:"TBD",DueDayOfMonth:"1",SplitNote:"Split 50/50 — exact amount TBD",Category:"Housing"},
+    {ID:"1",BillName:"Rent",TypicalAmount:"5450",DueDayOfMonth:"1",SplitNote:"Split 50/50 — $2,725 each, paid separately",Category:"Housing"},
     {ID:"2",BillName:"Electricity",TypicalAmount:"",DueDayOfMonth:"15",SplitNote:"Varies monthly",Category:"Utilities"},
     {ID:"3",BillName:"Internet (Spectrum)",TypicalAmount:"110",DueDayOfMonth:"1",SplitNote:"Split 50/50 (~$55 each)",Category:"Utilities"},
   ],
@@ -351,9 +403,6 @@ async function loadAll() {
   }
 }
 
-// Apps Script Web Apps intermittently serve a Google interstitial (HTML, not JSON) on
-// cross-origin fetch — credentials:'omit' avoids the cookie/session path that triggers it,
-// and a few retries with backoff catch the rest.
 async function fetchJsonWithRetry(url, options, attempts) {
   attempts = attempts || 5;
   options = Object.assign({ credentials: 'omit', cache: 'no-store' }, options || {});
@@ -407,8 +456,6 @@ function visibleForView(assignedTo) {
   if (view === 'Both') return true;
   return assignedTo === view || assignedTo === 'Everyone';
 }
-// Who a checked-off item should be attributed to: the chore's own assignee if it's a
-// specific person, otherwise (Everyone) fall back to the active view if it's Kyle/Matt.
 function attributionFor(assignedTo) {
   if (assignedTo === 'Kyle' || assignedTo === 'Matt') return assignedTo;
   const view = getView();
@@ -421,33 +468,48 @@ function isTrue(v) { return v === true || v === 'TRUE' || v === 'true'; }
 function fmtDate(d) { if (!d || d === 'TBD') return d || '—'; return d; }
 function statusClass(s) { return 'status-' + String(s || '').toLowerCase().replace(/\s+/g, ''); }
 function personClass(name) { return 'person-' + String(name || '').toLowerCase(); }
+function currentPeriod() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
 
 function monthInfo(offset) {
   const d = new Date();
   d.setDate(1);
-  d.setMonth(d.getMonth() + offset);
+  d.setMonth(d.getMonth() + (offset || 0));
   return { year: d.getFullYear(), month: d.getMonth(), label: d.toLocaleString('en-US', { month: 'long', year: 'numeric' }) };
 }
-function historyEntryInMonth(choreId, mInfo) {
+function weekBounds() {
+  const now = new Date();
+  const day = now.getDay();
+  const diffToMonday = (day === 0 ? -6 : 1) - day;
+  const monday = new Date(now); monday.setHours(0,0,0,0); monday.setDate(now.getDate() + diffToMonday);
+  const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6); sunday.setHours(23,59,59,999);
+  return { start: monday, end: sunday };
+}
+function historyEntryInPeriod(choreId, cadence) {
   return DATA.History.find(h => {
     if (String(h.ChoreID) !== String(choreId)) return false;
     if (!h.CompletedDate) return false;
     const hd = new Date(h.CompletedDate + 'T00:00:00');
-    return hd.getFullYear() === mInfo.year && hd.getMonth() === mInfo.month;
+    if (cadence === 'Weekly') {
+      const { start, end } = weekBounds();
+      return hd >= start && hd <= end;
+    }
+    const now = new Date();
+    return hd.getFullYear() === now.getFullYear() && hd.getMonth() === now.getMonth();
   });
 }
-function monthDateStamp(mInfo, isCurrent) {
-  if (isCurrent) return new Date().toISOString().slice(0, 10);
-  return `${mInfo.year}-${String(mInfo.month + 1).padStart(2, '0')}-01`;
-}
 
-// ============================== RENDER: ONGOING CHORES (this month, by room) ==============================
+// ============================== RENDER: ONGOING CHORES ==============================
 function renderOngoingChores() {
   const recurring = DATA.Chores.filter(c => c.Type === 'Recurring' && visibleForView(c.AssignedTo));
-  const current = monthInfo(0);
+  const weekly = recurring.filter(c => c.Cadence === 'Weekly');
+  const monthly = recurring.filter(c => c.Cadence !== 'Weekly');
+  const mInfo = monthInfo(0);
   const container = document.getElementById('monthlyChores');
-  container.innerHTML = '';
-  container.appendChild(renderMonthBlock(current, recurring));
+  container.innerHTML = `<div class="month-block"><div class="month-head"><span class="mh-pill">${mInfo.label}</span></div>
+    ${renderCadenceSection('Weekly Tasks', weekly)}
+    ${renderCadenceSection('Monthly Tasks', monthly)}
+    ${(!weekly.length && !monthly.length) ? '<div class="empty">No recurring chores in this view.</div>' : ''}
+  </div>`;
 
   const oneOffs = DATA.Chores.filter(c => c.Type === 'One-off' && c.ID !== REFRESH_CHORE_ID && visibleForView(c.AssignedTo));
   const el = document.getElementById('oneOffChores');
@@ -462,48 +524,56 @@ function renderOngoingChores() {
   }
 }
 
-function renderMonthBlock(mInfo, chores) {
-  const block = document.createElement('div');
-  block.className = 'month-block';
+function renderCadenceSection(label, chores) {
+  if (!chores.length) return '';
   const bySection = {};
   chores.forEach(c => { (bySection[c.Section] = bySection[c.Section] || []).push(c); });
-  const roomsHtml = SECTIONS.filter(s => bySection[s] && bySection[s].length).map(section => {
-    const rows = bySection[section].map(chore => {
-      const entry = historyEntryInMonth(chore.ID, mInfo);
-      const done = !!entry;
-      return `
-        <div class="month-row">
-          <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleMonthlyChore('${chore.ID}', ${mInfo.year}, ${mInfo.month}, this.checked)">
-          <div class="mr-main">
-            <div class="mr-name ${done ? 'done' : ''}">${chore.Name}</div>
-            <div class="mr-meta">${chore.Cadence || ''} <span class="badge ${personClass(chore.AssignedTo)}" style="margin-left:6px;">${chore.AssignedTo}</span></div>
-          </div>
-        </div>`;
-    }).join('');
+  const rooms = SECTIONS.filter(s => bySection[s] && bySection[s].length).map(section => {
+    const rows = bySection[section].map(chore => renderChoreRowHtml(chore)).join('');
     return `<div class="room-group"><h4>${section}</h4><div class="room-rows">${rows}</div></div>`;
   }).join('');
-  block.innerHTML = `
-    <div class="month-head"><span class="mh-pill">${mInfo.label}</span></div>
-    ${roomsHtml || '<div class="empty">No recurring chores in this view.</div>'}`;
-  return block;
+  return `<div class="cadence-section"><div class="cadence-label">${label}</div>${rooms}</div>`;
 }
 
-async function toggleMonthlyChore(choreId, year, month, checked) {
-  const mInfo = { year, month };
+function renderChoreRowHtml(chore) {
+  const done = !!historyEntryInPeriod(chore.ID, chore.Cadence);
+  return `
+    <div class="month-row">
+      <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleCadenceChore('${chore.ID}', this.checked)">
+      <div class="mr-main">
+        <div class="mr-name ${done ? 'done' : ''}">${chore.Name}</div>
+        <div class="mr-meta">${chore.Cadence || ''}</div>
+      </div>
+      <select class="owner-select ${personClass(chore.AssignedTo)}" onchange="changeOwner('${chore.ID}', this.value)">
+        <option value="Kyle" ${chore.AssignedTo === 'Kyle' ? 'selected' : ''}>Kyle</option>
+        <option value="Matt" ${chore.AssignedTo === 'Matt' ? 'selected' : ''}>Matt</option>
+        <option value="Everyone" ${chore.AssignedTo === 'Everyone' ? 'selected' : ''}>Everyone</option>
+      </select>
+    </div>`;
+}
+
+async function toggleCadenceChore(choreId, checked) {
   const chore = DATA.Chores.find(c => String(c.ID) === String(choreId));
   if (checked) {
     const by = attributionFor(chore.AssignedTo);
-    const date = monthDateStamp(mInfo, true);
-    const res = await apiWrite('History', 'append', { data: { ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: date, Notes: '' } });
-    DATA.History.push(res.row || { ID: String(Date.now()), ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: date, Notes: '' });
+    const today = new Date().toISOString().slice(0, 10);
+    const res = await apiWrite('History', 'append', { data: { ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' } });
+    DATA.History.push(res.row || { ID: String(Date.now()), ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' });
   } else {
-    const entry = historyEntryInMonth(choreId, mInfo);
+    const entry = historyEntryInPeriod(choreId, chore.Cadence);
     if (entry) {
       await apiWrite('History', 'delete', { id: entry.ID });
       DATA.History = DATA.History.filter(h => String(h.ID) !== String(entry.ID));
     }
   }
-  renderOngoingChores();
+  renderAll();
+}
+
+async function changeOwner(choreId, newOwner) {
+  await apiWrite('Chores', 'update', { id: choreId, data: { AssignedTo: newOwner } });
+  const chore = DATA.Chores.find(c => String(c.ID) === String(choreId));
+  if (chore) chore.AssignedTo = newOwner;
+  renderAll();
 }
 
 function renderOneOffCard(chore) {
@@ -527,7 +597,7 @@ async function markOneOffDone(choreId) {
   const today = new Date().toISOString().slice(0, 10);
   const res = await apiWrite('History', 'append', { data: { ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' } });
   DATA.History.push(res.row || { ID: String(Date.now()), ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' });
-  renderOngoingChores();
+  renderAll();
 }
 
 async function addChore() {
@@ -546,8 +616,14 @@ async function addChore() {
   DATA.Chores.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
   document.getElementById('chore-name').value = '';
   document.getElementById('chore-notes').value = '';
-  renderOngoingChores();
-  alert(`Added "${name}" — check the Ongoing Chores tab.`);
+  renderAll();
+}
+
+async function deleteChore(id) {
+  if (!confirm('Remove this chore?')) return;
+  await apiWrite('Chores', 'delete', { id });
+  DATA.Chores = DATA.Chores.filter(c => String(c.ID) !== String(id));
+  renderAll();
 }
 
 // ============================== RENDER: 2026 APARTMENT REFRESH ==============================
@@ -557,43 +633,113 @@ function renderRefreshTab() {
   featureEl.innerHTML = '';
   if (!refreshChore) { featureEl.innerHTML = '<div class="empty">Nothing here yet.</div>'; return; }
   const items = byParent(DATA.ChecklistItems, 'Chore', refreshChore.ID)
-    .filter(i => visibleForView(i.AssignedTo || 'Everyone'))
-    .sort((a, b) => (a.SortOrder || 0) - (b.SortOrder || 0));
+    .filter(i => visibleForView(i.AssignedTo || 'Everyone'));
   const doneCount = items.filter(i => isTrue(i.Done)).length;
   const pct = items.length ? Math.round((doneCount / items.length) * 100) : 0;
+
+  const byMonth = {};
+  items.forEach(i => {
+    const key = (i.GoalDate && i.GoalDate !== 'TBD') ? i.GoalDate : 'unscheduled';
+    (byMonth[key] = byMonth[key] || []).push(i);
+  });
+  const monthKeys = Object.keys(byMonth).filter(k => k !== 'unscheduled').sort();
+  const timelineHtml = monthKeys.length ? `
+    <div class="section-group">
+      <h4>Timeline</h4>
+      <div class="card-grid">
+        ${monthKeys.map(k => {
+          const label = new Date(k + '-02').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+          const names = byMonth[k].map(i => `${isTrue(i.Done) ? '✓ ' : ''}${i.ItemText}`).join(', ');
+          return `<div class="item-card"><div class="ic-title">${label}</div><div class="ic-meta">${names}</div></div>`;
+        }).join('')}
+      </div>
+    </div>` : '';
+
+  const bucketsHtml = REFRESH_CATEGORIES.map(cat => {
+    const catItems = items.filter(i => (i.Category || 'Complete') === cat);
+    if (!catItems.length) return '';
+    return `
+      <div class="subhead" style="font-family:Georgia,serif;font-weight:700;font-size:16px;margin:18px 0 8px;">${cat === 'Sell' ? '🏷️ Items to Sell' : cat === 'Buy' ? '🛍️ Items to Buy' : '✅ Items to Complete'}</div>
+      <ul class="timeline">
+        ${catItems.map(i => `
+          <li>
+            <input type="checkbox" class="ti-check" ${isTrue(i.Done) ? 'checked' : ''} onchange="toggleChecklist('${i.ID}', this.checked)">
+            <div style="flex:1;">
+              <div class="ti-text ${isTrue(i.Done) ? 'done' : ''}">${i.ItemText}</div>
+              <div class="ti-meta">
+                <input type="month" class="cadence-input" style="width:120px;" value="${(i.GoalDate && i.GoalDate !== 'TBD') ? i.GoalDate : ''}" onchange="setGoalMonth('${i.ID}', this.value)">
+                ${i.AssignedTo ? ' · ' + i.AssignedTo : ''}
+              </div>
+            </div>
+          </li>`).join('')}
+      </ul>`;
+  }).join('');
+
   const card = document.createElement('div');
   card.className = 'feature-card';
   card.innerHTML = `
     <div class="fc-eyebrow">Flagship Project</div>
     <h3>${refreshChore.Name}</h3>
-    <div class="fc-meta">${refreshChore.Section} · Assigned <span class="badge ${personClass(refreshChore.AssignedTo)}">${refreshChore.AssignedTo}</span> · Timeline ${fmtDate(refreshChore.TimelineStart)} → ${fmtDate(refreshChore.TimelineDue)} · <span class="badge status-${statusClass(refreshChore.Status)}">${refreshChore.Status}</span></div>
+    <div class="fc-meta">${refreshChore.Section} · Assigned <span class="badge ${personClass(refreshChore.AssignedTo)}">${refreshChore.AssignedTo}</span> · <span class="badge status-${statusClass(refreshChore.Status)}">${refreshChore.Status}</span></div>
     <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
     <div class="progress-label">${doneCount} of ${items.length} steps done</div>
-    <ul class="timeline">
-      ${items.map(i => `
-        <li>
-          <input type="checkbox" class="ti-check" ${isTrue(i.Done) ? 'checked' : ''} onchange="toggleChecklist('${i.ID}', this.checked)">
-          <div>
-            <div class="ti-text ${isTrue(i.Done) ? 'done' : ''}">${i.ItemText}</div>
-            <div class="ti-meta">${i.GoalDate ? `<span class="goal-badge">Goal: ${fmtDate(i.GoalDate)}</span>` : ''} ${i.AssignedTo ? ' · ' + i.AssignedTo : ''}</div>
-          </div>
-        </li>`).join('')}
-    </ul>`;
+    ${bucketsHtml}`;
   featureEl.appendChild(card);
+  if (timelineHtml) featureEl.insertAdjacentHTML('beforeend', timelineHtml);
+
+  featureEl.insertAdjacentHTML('beforeend', `
+    <div class="section-group">
+      <h4>Add an item</h4>
+      <div class="add-form">
+        <div class="full"><label>Item</label><input id="refresh-name" placeholder="e.g. Buy floor lamp"></div>
+        <div><label>Category</label><select id="refresh-category"><option>Sell</option><option>Buy</option><option>Complete</option></select></div>
+        <div><label>Owner</label><select id="refresh-assigned"><option value="">Unassigned</option><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
+        <div><label>Goal Month</label><input id="refresh-goal" type="month"></div>
+        <div><button class="btn primary" onclick="addRefreshItem()">Add Item</button></div>
+      </div>
+    </div>`);
 }
 
 async function toggleChecklist(id, done) {
   await apiWrite('ChecklistItems', 'update', { id, data: { Done: done ? 'TRUE' : 'FALSE' } });
   const row = DATA.ChecklistItems.find(r => String(r.ID) === String(id));
   if (row) row.Done = done ? 'TRUE' : 'FALSE';
-  renderRefreshTab();
+  renderAll();
 }
 
-// ============================== RENDER: MANAGEMENT ==============================
+async function setGoalMonth(id, val) {
+  await apiWrite('ChecklistItems', 'update', { id, data: { GoalDate: val } });
+  const row = DATA.ChecklistItems.find(r => String(r.ID) === String(id));
+  if (row) row.GoalDate = val;
+  renderAll();
+}
+
+async function addRefreshItem() {
+  const text = document.getElementById('refresh-name').value.trim();
+  if (!text) return;
+  const items = byParent(DATA.ChecklistItems, 'Chore', REFRESH_CHORE_ID);
+  const maxSort = items.reduce((m, i) => Math.max(m, parseInt(i.SortOrder, 10) || 0), 0);
+  const data = {
+    ParentType: 'Chore', ParentID: REFRESH_CHORE_ID, ItemText: text,
+    AssignedTo: document.getElementById('refresh-assigned').value,
+    GoalDate: document.getElementById('refresh-goal').value,
+    Done: 'FALSE', SortOrder: String(maxSort + 1),
+    Category: document.getElementById('refresh-category').value,
+  };
+  const res = await apiWrite('ChecklistItems', 'append', { data });
+  DATA.ChecklistItems.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+  document.getElementById('refresh-name').value = '';
+  document.getElementById('refresh-goal').value = '';
+  renderAll();
+}
+
+// ============================== RENDER: BUILDING MANAGEMENT ==============================
+const MGMT_STATUS_ORDER = ['Open', 'Contacted Management', 'Complete'];
+
 function renderManagement() {
   const el = document.getElementById('managementList');
   el.innerHTML = '';
-  if (!DATA.ManagementItems.length) { el.innerHTML = '<div class="empty">Nothing logged yet — add an item below.</div>'; return; }
+  if (!DATA.ManagementItems.length) { el.innerHTML = '<div class="empty">Nothing logged yet.</div>'; }
   DATA.ManagementItems.forEach(item => {
     const card = document.createElement('div');
     card.className = 'item-card';
@@ -606,15 +752,26 @@ function renderManagement() {
       </div>`;
     el.appendChild(card);
   });
+  el.insertAdjacentHTML('beforeend', `
+    <div class="add-form" style="grid-column: 1 / -1;">
+      <div class="full"><label>Name</label><input id="mgmt-name" placeholder="e.g. Fix leaking faucet"></div>
+      <div><label>Section</label><select id="mgmt-section"></select></div>
+      <div><label>Contacted Management?</label><select id="mgmt-contacted"><option>No</option><option>Yes</option></select></div>
+      <div><label>Contacted By</label><select id="mgmt-by"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
+      <div><label>Method</label><select id="mgmt-method"><option>Online Portal</option><option>Text</option></select></div>
+      <div class="full"><label>Notes</label><input id="mgmt-notes" placeholder="Optional"></div>
+      <div><button class="btn primary" onclick="addManagementItem()">Log Item</button></div>
+    </div>`);
+  const sectionSel = document.getElementById('mgmt-section');
+  if (sectionSel) sectionSel.innerHTML = SECTIONS.map(s => `<option>${s}</option>`).join('');
 }
 
 async function cycleManagementStatus(id) {
-  const order = ['Not Started', 'Submitted', 'In Progress', 'Resolved'];
   const item = DATA.ManagementItems.find(r => String(r.ID) === String(id));
-  const next = order[(order.indexOf(item.Status) + 1) % order.length];
+  const next = MGMT_STATUS_ORDER[(MGMT_STATUS_ORDER.indexOf(item.Status) + 1) % MGMT_STATUS_ORDER.length];
   await apiWrite('ManagementItems', 'update', { id, data: { Status: next } });
   item.Status = next;
-  renderManagement();
+  renderAll();
 }
 
 async function addManagementItem() {
@@ -628,14 +785,12 @@ async function addManagementItem() {
     ContactedBy: contacted === 'Yes' ? document.getElementById('mgmt-by').value : '',
     Method: contacted === 'Yes' ? document.getElementById('mgmt-method').value : '',
     DateContacted: contacted === 'Yes' ? new Date().toISOString().slice(0, 10) : '',
-    Status: contacted === 'Yes' ? 'Submitted' : 'Not Started',
+    Status: contacted === 'Yes' ? 'Contacted Management' : 'Open',
     Notes: document.getElementById('mgmt-notes').value.trim(),
   };
   const res = await apiWrite('ManagementItems', 'append', { data });
   DATA.ManagementItems.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
-  document.getElementById('mgmt-name').value = '';
-  document.getElementById('mgmt-notes').value = '';
-  renderManagement();
+  renderAll();
 }
 
 // ============================== RENDER: COMMUNAL SHOPPING LIST ==============================
@@ -646,9 +801,10 @@ function nextDueInfo(item) {
   const due = new Date(last.getTime() + days * 86400000);
   const today = new Date();
   const diffDays = Math.round((due - today) / 86400000);
-  if (diffDays < 0) return { label: `Overdue by ${Math.abs(diffDays)}d`, cls: 'color:var(--coral);font-weight:800;' };
-  if (diffDays <= 5) return { label: `Due in ${diffDays}d`, cls: 'color:var(--yellow);font-weight:800;' };
-  return { label: `Due in ${diffDays}d`, cls: 'color:var(--teal);font-weight:700;' };
+  const dueDateStr = due.toISOString().slice(0, 10);
+  if (diffDays < 0) return { label: `Overdue by ${Math.abs(diffDays)}d (was due ${dueDateStr})`, cls: 'color:var(--coral);font-weight:800;' };
+  if (diffDays <= 5) return { label: `Due in ${diffDays}d (${dueDateStr})`, cls: 'color:var(--yellow);font-weight:800;' };
+  return { label: `Due ${dueDateStr}`, cls: 'color:var(--teal);font-weight:700;' };
 }
 
 function renderCommunal() {
@@ -660,14 +816,32 @@ function renderCommunal() {
     card.className = 'item-card';
     card.innerHTML = `
       <div class="ic-head"><div class="ic-title">${item.ItemName}</div><span class="badge person-everyone">${item.Section}</span></div>
+      <div class="ic-meta">Buy every <input class="cadence-input" type="number" value="${item.TypicalCadenceDays || ''}" onchange="updateCadence('${item.ID}', this.value)"> days</div>
       <div class="ic-meta">${item.LastBoughtDate ? `Last bought ${fmtDate(item.LastBoughtDate)} by ${item.LastBoughtBy}` : 'Never bought yet'}</div>
       <div class="ic-meta" style="${due.cls}">${due.label}</div>
       <div class="ic-actions">
-        <button class="btn kyle" onclick="markBought('${item.ID}', 'Kyle')">Kyle bought it</button>
-        <button class="btn matt" onclick="markBought('${item.ID}', 'Matt')">Matt bought it</button>
+        <input type="number" step="0.01" class="cadence-input" style="width:70px;" id="price-${item.ID}" placeholder="$ (opt.)">
+        <button class="btn kyle sm" onclick="markBought('${item.ID}', 'Kyle')">Kyle bought it</button>
+        <button class="btn matt sm" onclick="markBought('${item.ID}', 'Matt')">Matt bought it</button>
       </div>`;
     el.appendChild(card);
   });
+  el.insertAdjacentHTML('beforeend', `
+    <div class="add-form" style="grid-column: 1 / -1;">
+      <div class="full"><label>Item</label><input id="comm-name" placeholder="e.g. Dish Soap"></div>
+      <div><label>Section</label><select id="comm-section"></select></div>
+      <div><label>Typical Cadence (days)</label><input id="comm-cadence" type="number" placeholder="e.g. 21"></div>
+      <div><button class="btn primary" onclick="addCommunalItem()">Add Item</button></div>
+    </div>`);
+  const sel = document.getElementById('comm-section');
+  if (sel) sel.innerHTML = SECTIONS.map(s => `<option>${s}</option>`).join('');
+}
+
+async function updateCadence(id, days) {
+  await apiWrite('CommunalItems', 'update', { id, data: { TypicalCadenceDays: days } });
+  const item = DATA.CommunalItems.find(r => String(r.ID) === String(id));
+  if (item) item.TypicalCadenceDays = days;
+  renderAll();
 }
 
 async function markBought(id, by) {
@@ -676,7 +850,15 @@ async function markBought(id, by) {
   await apiWrite('CommunalItemHistory', 'append', { data: { ItemName: item.ItemName, BoughtBy: by, Date: today, Price: '', Notes: '' } });
   await apiWrite('CommunalItems', 'update', { id, data: { LastBoughtDate: today, LastBoughtBy: by } });
   item.LastBoughtDate = today; item.LastBoughtBy = by;
-  renderCommunal();
+
+  const priceInput = document.getElementById('price-' + id);
+  const price = priceInput ? parseFloat(priceInput.value) : 0;
+  if (price > 0) {
+    const data = { BillName: 'Communal: ' + item.ItemName, AmountPaid: String(price), PaidBy: by, DatePaid: today, Period: currentPeriod(), Notes: 'Communal item purchase', SplitType: 'Shared 50/50' };
+    const res = await apiWrite('Payments', 'append', { data });
+    DATA.Payments.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+  }
+  renderAll();
 }
 
 async function addCommunalItem() {
@@ -690,33 +872,71 @@ async function addCommunalItem() {
   };
   const res = await apiWrite('CommunalItems', 'append', { data });
   DATA.CommunalItems.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
-  document.getElementById('comm-name').value = '';
-  document.getElementById('comm-cadence').value = '';
-  renderCommunal();
+  renderAll();
 }
 
 // ============================== RENDER: APARTMENT FINANCES ==============================
+function computeBalance() {
+  let kyleOwesMatt = 0, mattOwesKyle = 0;
+  DATA.Payments.forEach(p => {
+    const split = p.SplitType || 'Shared 50/50';
+    if (split !== 'Shared 50/50') return;
+    const half = (parseFloat(p.AmountPaid) || 0) / 2;
+    if (p.PaidBy === 'Kyle') mattOwesKyle += half;
+    else if (p.PaidBy === 'Matt') kyleOwesMatt += half;
+  });
+  return { kyleOwesMatt, mattOwesKyle, net: mattOwesKyle - kyleOwesMatt };
+}
+
 function renderFinances() {
-  const table = document.getElementById('finSummaryTable');
-  const bills = DATA.Bills.map(b => b.BillName);
-  let kyleTotal = 0, mattTotal = 0;
-  let rows = bills.map(name => {
-    const kyle = DATA.Payments.filter(p => p.BillName === name && p.PaidBy === 'Kyle').reduce((s, p) => s + (parseFloat(p.AmountPaid) || 0), 0);
-    const matt = DATA.Payments.filter(p => p.BillName === name && p.PaidBy === 'Matt').reduce((s, p) => s + (parseFloat(p.AmountPaid) || 0), 0);
-    kyleTotal += kyle; mattTotal += matt;
-    return `<tr><td>${name}</td><td class="num">$${kyle.toFixed(2)}</td><td class="num">$${matt.toFixed(2)}</td><td class="num">$${(kyle + matt).toFixed(2)}</td></tr>`;
+  const bal = computeBalance();
+  const bannerEl = document.getElementById('balanceBanner');
+  let bannerText;
+  if (Math.abs(bal.net) < 0.01) bannerText = 'All settled up — nobody owes anybody right now.';
+  else if (bal.net > 0) bannerText = `Matt owes Kyle <span class="bb-amount">$${bal.net.toFixed(2)}</span>`;
+  else bannerText = `Kyle owes Matt <span class="bb-amount">$${Math.abs(bal.net).toFixed(2)}</span>`;
+  bannerEl.innerHTML = `<div class="balance-banner">${bannerText}</div>`;
+
+  const periods = Array.from(new Set(DATA.Payments.map(p => p.Period).filter(Boolean)));
+  const cur = currentPeriod();
+  if (!periods.includes(cur)) periods.push(cur);
+  periods.sort().reverse();
+
+  const periodsEl = document.getElementById('financePeriods');
+  periodsEl.innerHTML = periods.map(period => {
+    const label = new Date(period + '-02').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    const rows = DATA.Bills.map(bill => {
+      const pays = DATA.Payments.filter(p => p.BillName === bill.BillName && p.Period === period);
+      if (bill.BillName === 'Rent') {
+        const total = parseFloat(bill.TypicalAmount) || 0;
+        const half = total ? (total / 2).toFixed(2) : '?';
+        const kylePaid = pays.find(p => p.PaidBy === 'Kyle');
+        const mattPaid = pays.find(p => p.PaidBy === 'Matt');
+        return `
+          <div class="period-row"><span class="pr-check ${kylePaid ? 'yes' : 'no'}">${kylePaid ? '✓' : '○'}</span><span class="pr-label">Rent — Kyle's share</span><span class="pr-amt">$${half}</span></div>
+          <div class="period-row"><span class="pr-check ${mattPaid ? 'yes' : 'no'}">${mattPaid ? '✓' : '○'}</span><span class="pr-label">Rent — Matt's share</span><span class="pr-amt">$${half}</span></div>`;
+      }
+      const entry = pays[0];
+      const label2 = entry ? `${bill.BillName} — ${entry.PaidBy} paid $${parseFloat(entry.AmountPaid).toFixed(2)}` : `${bill.BillName} — not logged yet`;
+      return `<div class="period-row"><span class="pr-check ${entry ? 'yes' : 'no'}">${entry ? '✓' : '○'}</span><span class="pr-label">${label2}</span></div>`;
+    }).join('');
+    return `<div class="period-card ${period === cur ? 'current' : ''}"><div class="pc-head">${label}${period === cur ? ' (current)' : ''}</div>${rows}</div>`;
   }).join('');
-  table.innerHTML = `
-    <tr><th>Bill</th><th>Kyle Paid</th><th>Matt Paid</th><th>Combined</th></tr>
-    ${rows}
-    <tr class="total"><td>Total</td><td class="num">$${kyleTotal.toFixed(2)}</td><td class="num">$${mattTotal.toFixed(2)}</td><td class="num">$${(kyleTotal + mattTotal).toFixed(2)}</td></tr>`;
 
   const billSelect = document.getElementById('pay-bill');
   billSelect.innerHTML = DATA.Bills.map(b => `<option>${b.BillName}</option>`).join('');
+  onBillChange();
+  if (!document.getElementById('pay-period').value) document.getElementById('pay-period').value = cur;
 
   const log = document.getElementById('paymentLog');
   const sorted = [...DATA.Payments].sort((a, b) => (a.DatePaid < b.DatePaid ? 1 : -1));
-  log.innerHTML = sorted.length ? sorted.map(p => `<li><span>${p.BillName} — ${p.PaidBy}</span><span class="mono">$${parseFloat(p.AmountPaid || 0).toFixed(2)} · ${fmtDate(p.DatePaid)}</span></li>`).join('') : '<div class="empty">No payments logged yet.</div>';
+  log.innerHTML = sorted.length ? sorted.map(p => `<li><span>${p.BillName} — ${p.PaidBy} <span class="badge person-everyone" style="font-size:9px;">${p.SplitType || 'Shared 50/50'}</span></span><span class="mono">$${parseFloat(p.AmountPaid || 0).toFixed(2)} · ${fmtDate(p.DatePaid)}</span></li>`).join('') : '<div class="empty">No payments logged yet.</div>';
+}
+
+function onBillChange() {
+  const bill = document.getElementById('pay-bill').value;
+  const splitSel = document.getElementById('pay-split');
+  if (splitSel) splitSel.value = bill === 'Rent' ? 'Own Share' : 'Shared 50/50';
 }
 
 async function addPayment() {
@@ -726,22 +946,113 @@ async function addPayment() {
     BillName: document.getElementById('pay-bill').value,
     AmountPaid: amount,
     PaidBy: document.getElementById('pay-by').value,
+    SplitType: document.getElementById('pay-split').value,
     DatePaid: document.getElementById('pay-date').value || new Date().toISOString().slice(0, 10),
-    Period: document.getElementById('pay-period').value,
+    Period: document.getElementById('pay-period').value || currentPeriod(),
     Notes: '',
   };
   const res = await apiWrite('Payments', 'append', { data });
   DATA.Payments.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
   document.getElementById('pay-amount').value = '';
-  document.getElementById('pay-period').value = '';
-  renderFinances();
+  renderAll();
+}
+
+// ============================== RENDER: MANAGE APARTMENT ==============================
+function renderManageApartment() {
+  const choreTable = document.getElementById('choreRefTable');
+  const chores = DATA.Chores.filter(c => c.ID !== REFRESH_CHORE_ID);
+  choreTable.innerHTML = `
+    <tr><th>Chore</th><th>Section</th><th>Frequency</th><th>Owner</th><th></th></tr>
+    ${chores.map(c => `
+      <tr>
+        <td>${c.Name}</td>
+        <td>${c.Section}</td>
+        <td>${c.Cadence}</td>
+        <td><select class="owner-select ${personClass(c.AssignedTo)}" onchange="changeOwner('${c.ID}', this.value)">
+          <option value="Kyle" ${c.AssignedTo === 'Kyle' ? 'selected' : ''}>Kyle</option>
+          <option value="Matt" ${c.AssignedTo === 'Matt' ? 'selected' : ''}>Matt</option>
+          <option value="Everyone" ${c.AssignedTo === 'Everyone' ? 'selected' : ''}>Everyone</option>
+        </select></td>
+        <td><button class="btn sm" onclick="deleteChore('${c.ID}')">Remove</button></td>
+      </tr>`).join('')}`;
+
+  const commTable = document.getElementById('communalRefTable');
+  commTable.innerHTML = `
+    <tr><th>Item</th><th>Section</th><th>Cadence (days)</th><th>Last Bought</th></tr>
+    ${DATA.CommunalItems.map(c => `
+      <tr>
+        <td>${c.ItemName}</td>
+        <td>${c.Section}</td>
+        <td><input class="cadence-input" type="number" value="${c.TypicalCadenceDays || ''}" onchange="updateCadence('${c.ID}', this.value)"></td>
+        <td>${c.LastBoughtDate ? fmtDate(c.LastBoughtDate) + ' by ' + c.LastBoughtBy : '—'}</td>
+      </tr>`).join('')}`;
+
+  const chSec = document.getElementById('chore-section');
+  if (chSec) chSec.innerHTML = SECTIONS.map(s => `<option>${s}</option>`).join('');
+  const cmSec = document.getElementById('comm-section-manage');
+}
+
+// ============================== OVERVIEW ==============================
+function renderOverview() {
+  const el = document.getElementById('overviewContent');
+  let html = '';
+
+  const recurring = DATA.Chores.filter(c => c.Type === 'Recurring' && visibleForView(c.AssignedTo));
+  const openChores = recurring.filter(c => !historyEntryInPeriod(c.ID, c.Cadence));
+  html += `<div class="overview-section"><h3>🧹 Chores Still Open (${openChores.length})</h3>`;
+  html += openChores.length ? openChores.map(c => `
+    <div class="ov-row">
+      <input type="checkbox" onchange="toggleCadenceChore('${c.ID}', this.checked)">
+      <div class="ov-label"><b>${c.Name}</b> — ${c.Section} · ${c.Cadence} <span class="badge ${personClass(c.AssignedTo)}">${c.AssignedTo}</span></div>
+    </div>`).join('') : '<div class="empty">Nothing open — nice.</div>';
+  html += '</div>';
+
+  const refreshChore = DATA.Chores.find(c => c.ID === REFRESH_CHORE_ID);
+  const refreshOpen = refreshChore ? byParent(DATA.ChecklistItems, 'Chore', REFRESH_CHORE_ID).filter(i => !isTrue(i.Done) && visibleForView(i.AssignedTo || 'Everyone')) : [];
+  html += `<div class="overview-section"><h3>🛋️ 2026 Refresh — Still To Do (${refreshOpen.length})</h3>`;
+  html += refreshOpen.length ? refreshOpen.map(i => `
+    <div class="ov-row">
+      <input type="checkbox" onchange="toggleChecklist('${i.ID}', this.checked)">
+      <div class="ov-label"><b>${i.ItemText}</b> ${i.Category ? '· ' + i.Category : ''}</div>
+    </div>`).join('') : '<div class="empty">Nothing open here either.</div>';
+  html += '</div>';
+
+  const openMgmt = DATA.ManagementItems.filter(m => m.Status !== 'Complete');
+  html += `<div class="overview-section"><h3>🏢 Building Management — Open (${openMgmt.length})</h3>`;
+  html += openMgmt.length ? openMgmt.map(m => `
+    <div class="ov-row">
+      <div class="ov-label"><b>${m.Name}</b> — <span class="badge ${statusClass(m.Status)}">${m.Status}</span></div>
+      <button class="btn sm" onclick="cycleManagementStatus('${m.ID}')">Advance</button>
+    </div>`).join('') : '<div class="empty">Nothing open.</div>';
+  html += '</div>';
+
+  const dueSoon = DATA.CommunalItems.map(item => ({ item, due: nextDueInfo(item) })).filter(x => x.due.label.includes('Overdue') || x.due.label.includes('Due in'));
+  html += `<div class="overview-section"><h3>🛒 Communal Items — Due Soon (${dueSoon.length})</h3>`;
+  html += dueSoon.length ? dueSoon.map(({ item, due }) => `
+    <div class="ov-row">
+      <div class="ov-label"><b>${item.ItemName}</b> — <span style="${due.cls}">${due.label}</span></div>
+      <button class="btn kyle sm" onclick="markBought('${item.ID}', 'Kyle')">Kyle</button>
+      <button class="btn matt sm" onclick="markBought('${item.ID}', 'Matt')">Matt</button>
+    </div>`).join('') : '<div class="empty">Nothing due soon.</div>';
+  html += '</div>';
+
+  const cur = currentPeriod();
+  const notLogged = DATA.Bills.filter(b => !DATA.Payments.some(p => p.BillName === b.BillName && p.Period === cur));
+  html += `<div class="overview-section"><h3>💰 Bills Not Yet Logged This Month (${notLogged.length})</h3>`;
+  html += notLogged.length ? notLogged.map(b => `
+    <div class="ov-row">
+      <div class="ov-label"><b>${b.BillName}</b></div>
+      <button class="btn sm" onclick="document.querySelector('[data-tab=finances]').click()">Go log it →</button>
+    </div>`).join('') : '<div class="empty">All logged for this month.</div>';
+  html += '</div>';
+
+  el.innerHTML = html;
 }
 
 // ============================== TABS + INIT ==============================
 function initSectionSelects() {
-  ['chore-section', 'mgmt-section', 'comm-section'].forEach(id => {
-    document.getElementById(id).innerHTML = SECTIONS.map(s => `<option>${s}</option>`).join('');
-  });
+  const chSec = document.getElementById('chore-section');
+  if (chSec) chSec.innerHTML = SECTIONS.map(s => `<option>${s}</option>`).join('');
 }
 
 function initTabs() {
@@ -761,6 +1072,8 @@ function renderAll() {
   renderManagement();
   renderCommunal();
   renderFinances();
+  renderManageApartment();
+  renderOverview();
 }
 
 (async function init() {
@@ -768,8 +1081,7 @@ function renderAll() {
   if (savedView) document.getElementById('viewSelect').value = savedView;
   document.getElementById('viewSelect').addEventListener('change', e => {
     localStorage.setItem('apartmentHQ_view', e.target.value);
-    renderOngoingChores();
-    renderRefreshTab();
+    renderAll();
   });
   document.getElementById('pay-date').value = new Date().toISOString().slice(0, 10);
   initSectionSelects();
