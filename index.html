@@ -259,7 +259,7 @@
         <div><label>Bill</label><select id="pay-bill" onchange="onBillChange()"></select></div>
         <div><label>Amount</label><input id="pay-amount" type="number" step="0.01" placeholder="0.00"></div>
         <div><label>Paid By</label><select id="pay-by"><option>Kyle</option><option>Matt</option></select></div>
-        <div><label>Split</label><select id="pay-split"><option value="Shared 50/50">Shared 50/50 (they owe half)</option><option value="Own Share">Own Share (just my portion)</option></select></div>
+        <div><label>Split</label><select id="pay-split"><option value="Shared 50/50">Shared 50/50 (they owe half)</option><option value="Own Share">Own Share (just my portion)</option><option value="Full Reimbursement">Full Reimbursement (they owe it all)</option></select></div>
         <div><label>Date</label><input id="pay-date" type="date"></div>
         <div><label>Period</label><input id="pay-period" placeholder="e.g. 2026-09"></div>
         <div><button class="btn primary" onclick="addPayment()">Log Payment</button></div>
@@ -880,10 +880,13 @@ function computeBalance() {
   let kyleOwesMatt = 0, mattOwesKyle = 0;
   DATA.Payments.forEach(p => {
     const split = p.SplitType || 'Shared 50/50';
-    if (split !== 'Shared 50/50') return;
-    const half = (parseFloat(p.AmountPaid) || 0) / 2;
-    if (p.PaidBy === 'Kyle') mattOwesKyle += half;
-    else if (p.PaidBy === 'Matt') kyleOwesMatt += half;
+    const amt = parseFloat(p.AmountPaid) || 0;
+    let owed = 0;
+    if (split === 'Shared 50/50') owed = amt / 2;
+    else if (split === 'Full Reimbursement') owed = amt;
+    else return;
+    if (p.PaidBy === 'Kyle') mattOwesKyle += owed;
+    else if (p.PaidBy === 'Matt') kyleOwesMatt += owed;
   });
   return { kyleOwesMatt, mattOwesKyle, net: mattOwesKyle - kyleOwesMatt };
 }
