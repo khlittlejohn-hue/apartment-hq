@@ -278,8 +278,7 @@ async function loadAll() {
     return;
   }
   try {
-    const res = await fetch(API_URL);
-    DATA = await res.json();
+    DATA = await fetchJsonWithRetry(API_URL);
     document.getElementById('modePill').textContent = 'Live';
     document.getElementById('modePill').className = 'mode-pill live';
     document.getElementById('previewBanner').style.display = 'none';
@@ -292,18 +291,34 @@ async function loadAll() {
   }
 }
 
+// Apps Script Web Apps sometimes serve a one-time Google interstitial (HTML, not JSON)
+// on the very first hit from a fresh browser session. Retrying a couple times clears it.
+async function fetchJsonWithRetry(url, options, attempts) {
+  attempts = attempts || 3;
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url, options);
+      return await res.json();
+    } catch (err) {
+      lastErr = err;
+      if (i < attempts - 1) await new Promise(r => setTimeout(r, 500 * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
+
 async function apiWrite(sheet, action, payload) {
   if (!API_URL) {
     // Preview mode: mutate in-memory only, nothing persists on reload.
     applyLocalMutation(sheet, action, payload);
     return { ok: true, local: true };
   }
-  const res = await fetch(API_URL, {
+  const json = await fetchJsonWithRetry(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(Object.assign({ sheet, action }, payload)),
   });
-  const json = await res.json();
   if (json.error) { alert('Save failed: ' + json.error); throw new Error(json.error); }
   return json;
 }
