@@ -21,7 +21,7 @@
   * { box-sizing: border-box; }
   html, body { background: var(--bg); color: var(--ink); margin: 0; padding: 0; }
   body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-  .page { max-width: 940px; margin: 0 auto; padding: 0 22px 100px; }
+  .page { max-width: 1440px; margin: 0 auto; padding: 0 32px 100px; }
   .display { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 700; }
   .mono { font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
   button, select, input, textarea { font-family: inherit; font-size: 14px; }
@@ -65,7 +65,7 @@
 
   .section-group { margin-bottom: 30px; }
   .section-group h4 { font-family: Georgia, serif; font-size: 17px; margin: 0 0 10px; }
-  .card-grid { display: grid; gap: 12px; }
+  .card-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
   .item-card { background: var(--surface); border: 2px solid var(--rule); border-radius: 16px; padding: 16px 18px; }
   .item-card .ic-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .item-card .ic-title { font-family: Georgia, serif; font-weight: 700; font-size: 16px; }
@@ -105,11 +105,14 @@
   .fin-summary tr.total td { font-weight: 800; border-top: 2px solid var(--purple); border-bottom: none; }
 
   .month-block { margin-bottom: 28px; }
-  .month-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .month-head .mh-pill { font-family: Georgia, serif; font-weight: 700; font-size: 19px; padding: 6px 16px; border-radius: 999px; color: #fff; background: linear-gradient(90deg, var(--purple), var(--pink)); }
+  .month-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .month-head .mh-pill { font-family: Georgia, serif; font-weight: 700; font-size: 20px; padding: 7px 18px; border-radius: 999px; color: #fff; background: linear-gradient(90deg, var(--purple), var(--pink)); }
   .month-block.past .mh-pill { background: linear-gradient(90deg, var(--coral), var(--yellow)); }
   .month-head .mh-note { font-size: 12.5px; color: var(--ink-soft); }
-  .month-row { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 2px solid var(--rule); border-radius: 14px; padding: 12px 16px; margin-bottom: 8px; }
+  .room-group { margin-bottom: 22px; }
+  .room-group h4 { font-family: Georgia, serif; font-size: 16px; margin: 0 0 10px; color: var(--purple); }
+  .room-rows { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .month-row { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 2px solid var(--rule); border-radius: 14px; padding: 12px 16px; }
   .month-row input { width: 20px; height: 20px; accent-color: var(--teal); flex-shrink: 0; }
   .month-row .mr-name { font-weight: 700; font-size: 14.5px; }
   .month-row .mr-name.done { text-decoration: line-through; color: var(--ink-soft); }
@@ -164,25 +167,15 @@
     <button class="tab-btn" data-tab="management">🏢 Building Management</button>
     <button class="tab-btn" data-tab="communal">🛒 Communal Shopping List</button>
     <button class="tab-btn" data-tab="finances">💰 Apartment Finances</button>
+    <button class="tab-btn" data-tab="manage">➕ Manage Chores</button>
   </div>
 
   <!-- ===================== ONGOING CHORES ===================== -->
   <div class="tab-panel active" id="tab-chores">
     <div class="section-head"><h2 class="display">Ongoing Chores</h2></div>
-    <p class="section-sub">This month on top, last month right below — anything you didn't check off carries over so it doesn't get lost.</p>
+    <p class="section-sub">This month's chores, grouped by room. Check them off as you go — add or edit chores from the Manage Chores tab.</p>
     <div id="monthlyChores"></div>
     <div id="oneOffChores"></div>
-    <div class="section-group">
-      <h4>Add a chore</h4>
-      <div class="add-form">
-        <div class="full"><label>Name</label><input id="chore-name" placeholder="e.g. Vacuum living room"></div>
-        <div><label>Type</label><select id="chore-type"><option>Recurring</option><option>One-off</option></select></div>
-        <div><label>Section</label><select id="chore-section"></select></div>
-        <div><label>Assigned To</label><select id="chore-assigned"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
-        <div><label>Cadence</label><input id="chore-cadence" placeholder="e.g. Monthly"></div>
-        <div><button class="btn primary" onclick="addChore()">Add Chore</button></div>
-      </div>
-    </div>
   </div>
 
   <!-- ===================== 2026 APARTMENT REFRESH ===================== -->
@@ -248,6 +241,21 @@
     </div>
   </div>
 
+  <!-- ===================== MANAGE CHORES ===================== -->
+  <div class="tab-panel" id="tab-manage">
+    <div class="section-head"><h2 class="display">Manage Chores</h2></div>
+    <p class="section-sub">Add new chores here — set the room, owner, and how often it happens. New chores show up on the Ongoing Chores tab right away.</p>
+    <div class="add-form">
+      <div class="full"><label>Name</label><input id="chore-name" placeholder="e.g. Wipe down baseboards"></div>
+      <div><label>Type</label><select id="chore-type"><option>Recurring</option><option>One-off</option></select></div>
+      <div><label>Section</label><select id="chore-section"></select></div>
+      <div><label>Owner</label><select id="chore-assigned"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
+      <div><label>Frequency</label><select id="chore-cadence"><option>Weekly</option><option>Biweekly</option><option>Monthly</option><option>Quarterly</option><option>One-time</option></select></div>
+      <div class="full"><label>Notes</label><input id="chore-notes" placeholder="Optional"></div>
+      <div><button class="btn primary" onclick="addChore()">Add Chore</button></div>
+    </div>
+  </div>
+
   <footer>
     <p>Apartment HQ — built for Kyle &amp; Matt. Data lives in a Google Sheet behind the scenes; this page is just the front end.</p>
   </footer>
@@ -263,19 +271,35 @@ const REFRESH_CHORE_ID = "6"; // "2026 Apartment Refresh" — matches Chores.ID 
 // ============================== SEED / PREVIEW DATA ==============================
 const SEED = {
   Chores: [
-    {ID:"1",Name:"Deep Clean Bathroom",Type:"Recurring",Section:"Bathroom",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:"See checklist for sub-steps"},
-    {ID:"2",Name:"Mop",Type:"Recurring",Section:"Whole Apartment",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"3",Name:"Organize Tupperware",Type:"One-off",Section:"Kitchen",AssignedTo:"Kyle",Cadence:"One-time",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"4",Name:"Deep Clean Fridge",Type:"Recurring",Section:"Kitchen",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
-    {ID:"5",Name:"Clean Backyard",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
     {ID:"6",Name:"2026 Apartment Refresh",Type:"One-off",Section:"Living Room",AssignedTo:"Everyone",Cadence:"One-time",TimelineStart:"TBD",TimelineDue:"TBD",Status:"In Progress",Notes:"Furniture swap + wallpaper — see checklist for the full plan and goal dates"},
+    {ID:"7",Name:"Reorganize Tupperware",Type:"Recurring",Section:"Kitchen",AssignedTo:"Kyle",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"8",Name:"Scrub Counters and Oven",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"10",Name:"Clean Air Fryer",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"11",Name:"Vacuum and Mop",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"12",Name:"Clean Out Grocery Bag Cabinet",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"13",Name:"Take Out Trash & Recycling",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"14",Name:"Wipe Down Stovetop & Backsplash",Type:"Recurring",Section:"Kitchen",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"15",Name:"Deep Clean Shower",Type:"Recurring",Section:"Bathroom",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"16",Name:"Deep Clean Toilet",Type:"Recurring",Section:"Bathroom",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"17",Name:"Mop Floors",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"18",Name:"Scrub Sink",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"19",Name:"Clean Mirror",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"20",Name:"Restock Toilet Paper & Toiletries Check",Type:"Recurring",Section:"Bathroom",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"21",Name:"Vacuum",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"22",Name:"Mop",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"23",Name:"Dust",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"24",Name:"Wipe Down All Surfaces",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"25",Name:"Straighten Pillows & Throws",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"26",Name:"Wipe Down TV & Electronics",Type:"Recurring",Section:"Living Room",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"27",Name:"Sweep Leaves",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"28",Name:"Clean Table",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"29",Name:"Clean Grill",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"30",Name:"Wipe Down Smaller Tables",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"31",Name:"Check/Pull Weeds",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
   ],
   ManagementItems: [],
   ChecklistItems: [
-    {ID:"1",ParentType:"Chore",ParentID:"1",ItemText:"Scrub shower",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"1"},
-    {ID:"2",ParentType:"Chore",ParentID:"1",ItemText:"Scrub toilet",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"2"},
-    {ID:"3",ParentType:"Chore",ParentID:"1",ItemText:"Wipe mirror",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"3"},
-    {ID:"4",ParentType:"Chore",ParentID:"1",ItemText:"Mop bathroom floor",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"4"},
     {ID:"5",ParentType:"Chore",ParentID:"6",ItemText:"Sell old couch, coffee table, TV stand",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"1"},
     {ID:"6",ParentType:"Chore",ParentID:"6",ItemText:"Buy new couch",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"2"},
     {ID:"7",ParentType:"Chore",ParentID:"6",ItemText:"Buy new coffee table",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"3"},
@@ -417,15 +441,13 @@ function monthDateStamp(mInfo, isCurrent) {
   return `${mInfo.year}-${String(mInfo.month + 1).padStart(2, '0')}-01`;
 }
 
-// ============================== RENDER: ONGOING CHORES (monthly) ==============================
+// ============================== RENDER: ONGOING CHORES (this month, by room) ==============================
 function renderOngoingChores() {
   const recurring = DATA.Chores.filter(c => c.Type === 'Recurring' && visibleForView(c.AssignedTo));
   const current = monthInfo(0);
-  const previous = monthInfo(-1);
   const container = document.getElementById('monthlyChores');
   container.innerHTML = '';
-  container.appendChild(renderMonthBlock(current, recurring, true));
-  container.appendChild(renderMonthBlock(previous, recurring, false));
+  container.appendChild(renderMonthBlock(current, recurring));
 
   const oneOffs = DATA.Chores.filter(c => c.Type === 'One-off' && c.ID !== REFRESH_CHORE_ID && visibleForView(c.AssignedTo));
   const el = document.getElementById('oneOffChores');
@@ -440,34 +462,38 @@ function renderOngoingChores() {
   }
 }
 
-function renderMonthBlock(mInfo, chores, isCurrent) {
+function renderMonthBlock(mInfo, chores) {
   const block = document.createElement('div');
-  block.className = 'month-block' + (isCurrent ? '' : ' past');
-  const rows = chores.map(chore => {
-    const entry = historyEntryInMonth(chore.ID, mInfo);
-    const done = !!entry;
-    const carryover = !isCurrent && !done;
-    return `
-      <div class="month-row">
-        <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleMonthlyChore('${chore.ID}', ${mInfo.year}, ${mInfo.month}, ${isCurrent}, this.checked)">
-        <div class="mr-main">
-          <div class="mr-name ${done ? 'done' : ''}">${chore.Name}</div>
-          <div class="mr-meta">${chore.Section} · ${chore.Cadence || ''} <span class="badge ${personClass(chore.AssignedTo)}" style="margin-left:6px;">${chore.AssignedTo}</span>${carryover ? ' <span class="badge carryover">Carryover</span>' : ''}</div>
-        </div>
-      </div>`;
+  block.className = 'month-block';
+  const bySection = {};
+  chores.forEach(c => { (bySection[c.Section] = bySection[c.Section] || []).push(c); });
+  const roomsHtml = SECTIONS.filter(s => bySection[s] && bySection[s].length).map(section => {
+    const rows = bySection[section].map(chore => {
+      const entry = historyEntryInMonth(chore.ID, mInfo);
+      const done = !!entry;
+      return `
+        <div class="month-row">
+          <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleMonthlyChore('${chore.ID}', ${mInfo.year}, ${mInfo.month}, this.checked)">
+          <div class="mr-main">
+            <div class="mr-name ${done ? 'done' : ''}">${chore.Name}</div>
+            <div class="mr-meta">${chore.Cadence || ''} <span class="badge ${personClass(chore.AssignedTo)}" style="margin-left:6px;">${chore.AssignedTo}</span></div>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div class="room-group"><h4>${section}</h4><div class="room-rows">${rows}</div></div>`;
   }).join('');
   block.innerHTML = `
-    <div class="month-head"><span class="mh-pill">${mInfo.label}</span>${!isCurrent ? '<span class="mh-note">Anything still unchecked here rolled forward</span>' : ''}</div>
-    ${rows || '<div class="empty">No recurring chores in this view.</div>'}`;
+    <div class="month-head"><span class="mh-pill">${mInfo.label}</span></div>
+    ${roomsHtml || '<div class="empty">No recurring chores in this view.</div>'}`;
   return block;
 }
 
-async function toggleMonthlyChore(choreId, year, month, isCurrent, checked) {
+async function toggleMonthlyChore(choreId, year, month, checked) {
   const mInfo = { year, month };
   const chore = DATA.Chores.find(c => String(c.ID) === String(choreId));
   if (checked) {
     const by = attributionFor(chore.AssignedTo);
-    const date = monthDateStamp(mInfo, isCurrent);
+    const date = monthDateStamp(mInfo, true);
     const res = await apiWrite('History', 'append', { data: { ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: date, Notes: '' } });
     DATA.History.push(res.row || { ID: String(Date.now()), ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: date, Notes: '' });
   } else {
@@ -513,13 +539,15 @@ async function addChore() {
     Section: document.getElementById('chore-section').value,
     AssignedTo: document.getElementById('chore-assigned').value,
     Cadence: document.getElementById('chore-cadence').value,
-    TimelineStart: '', TimelineDue: '', Status: 'Not Started', Notes: '',
+    TimelineStart: '', TimelineDue: '', Status: 'Not Started',
+    Notes: document.getElementById('chore-notes').value.trim(),
   };
   const res = await apiWrite('Chores', 'append', { data });
   DATA.Chores.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
   document.getElementById('chore-name').value = '';
-  document.getElementById('chore-cadence').value = '';
+  document.getElementById('chore-notes').value = '';
   renderOngoingChores();
+  alert(`Added "${name}" — check the Ongoing Chores tab.`);
 }
 
 // ============================== RENDER: 2026 APARTMENT REFRESH ==============================
