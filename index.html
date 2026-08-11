@@ -291,18 +291,21 @@ async function loadAll() {
   }
 }
 
-// Apps Script Web Apps sometimes serve a one-time Google interstitial (HTML, not JSON)
-// on the very first hit from a fresh browser session. Retrying a couple times clears it.
+// Apps Script Web Apps intermittently serve a Google interstitial (HTML, not JSON) on
+// cross-origin fetch — credentials:'omit' avoids the cookie/session path that triggers it,
+// and a few retries with backoff catch the rest.
 async function fetchJsonWithRetry(url, options, attempts) {
-  attempts = attempts || 3;
+  attempts = attempts || 5;
+  options = Object.assign({ credentials: 'omit', cache: 'no-store' }, options || {});
   let lastErr;
   for (let i = 0; i < attempts; i++) {
     try {
       const res = await fetch(url, options);
-      return await res.json();
+      const text = await res.text();
+      return JSON.parse(text);
     } catch (err) {
       lastErr = err;
-      if (i < attempts - 1) await new Promise(r => setTimeout(r, 500 * (i + 1)));
+      if (i < attempts - 1) await new Promise(r => setTimeout(r, 400 * (i + 1)));
     }
   }
   throw lastErr;
