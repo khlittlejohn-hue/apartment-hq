@@ -381,6 +381,29 @@ let DATA = null;
 
 function cloneSeed() { return JSON.parse(JSON.stringify(SEED)); }
 
+// Google Sheets auto-converts date-like strings ("2026-08", "2026-08-04") into
+// real Date cells on write, which the API then serializes back as full ISO
+// timestamps. Normalize defensively on read so the app works regardless of
+// whether a given cell ended up stored as text or as a Sheets date.
+function normPeriod(v) {
+  if (!v) return v;
+  const s = String(v);
+  const m = s.match(/^(\d{4})-(\d{2})/);
+  return m ? `${m[1]}-${m[2]}` : s;
+}
+function normDate(v) {
+  if (!v) return v;
+  const s = String(v);
+  const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  return m ? m[1] : s;
+}
+function normalizePayments(payments) {
+  (payments || []).forEach(p => {
+    if (p.Period) p.Period = normPeriod(p.Period);
+    if (p.DatePaid) p.DatePaid = normDate(p.DatePaid);
+  });
+}
+
 async function loadAll() {
   if (!API_URL) {
     DATA = cloneSeed();
@@ -391,6 +414,7 @@ async function loadAll() {
   }
   try {
     DATA = await fetchJsonWithRetry(API_URL);
+    normalizePayments(DATA.Payments);
     document.getElementById('modePill').textContent = 'Live';
     document.getElementById('modePill').className = 'mode-pill live';
     document.getElementById('previewBanner').style.display = 'none';
@@ -856,7 +880,10 @@ async function markBought(id, by) {
   if (price > 0) {
     const data = { BillName: 'Communal: ' + item.ItemName, AmountPaid: String(price), PaidBy: by, DatePaid: today, Period: currentPeriod(), Notes: 'Communal item purchase', SplitType: 'Shared 50/50' };
     const res = await apiWrite('Payments', 'append', { data });
-    DATA.Payments.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+    const row = res.row || Object.assign({ ID: String(Date.now()) }, data);
+    if (row.Period) row.Period = normPeriod(row.Period);
+    if (row.DatePaid) row.DatePaid = normDate(row.DatePaid);
+    DATA.Payments.push(row);
   }
   renderAll();
 }
@@ -955,7 +982,10 @@ async function addPayment() {
     Notes: '',
   };
   const res = await apiWrite('Payments', 'append', { data });
-  DATA.Payments.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+  const row = res.row || Object.assign({ ID: String(Date.now()) }, data);
+  if (row.Period) row.Period = normPeriod(row.Period);
+  if (row.DatePaid) row.DatePaid = normDate(row.DatePaid);
+  DATA.Payments.push(row);
   document.getElementById('pay-amount').value = '';
   renderAll();
 }
