@@ -1,0 +1,605 @@
+<meta charset="UTF-8">
+<title>Apartment HQ — Kyle &amp; Matt</title>
+<style>
+  :root {
+    --bg: #F1EFE8; --ink: #202536; --ink-soft: #60636F; --surface: #FFFFFF; --rule: #DEDACD;
+    --teal: #226B5B; --gold: #A9781F; --red: #B4432F; --navy: #202536; --shadow: 0 1px 0 rgba(27,33,49,0.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #12141E; --ink: #EAE8E0; --ink-soft: #9A9DB0; --surface: #1A1D2A; --rule: #2A2E40;
+    --teal: #3FBFA0; --gold: #D4A24C; --red: #E27A63; --navy: #EAE8E0; --shadow: 0 1px 0 rgba(0,0,0,0.4);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12141E; --ink: #EAE8E0; --ink-soft: #9A9DB0; --surface: #1A1D2A; --rule: #2A2E40;
+      --teal: #3FBFA0; --gold: #D4A24C; --red: #E27A63; --navy: #EAE8E0; --shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--ink); margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 920px; margin: 0 auto; padding: 0 22px 100px; }
+  .display { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 700; }
+  .mono { font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  button, select, input, textarea { font-family: inherit; font-size: 14px; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 0 10px; gap: 12px; flex-wrap: wrap; }
+  .topbar h1 { font-size: clamp(22px, 4vw, 28px); margin: 0; }
+  .topbar .sub { color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
+  .whoami { display: flex; align-items: center; gap: 8px; }
+  .whoami select { padding: 7px 10px; border-radius: 8px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); font-weight: 700; }
+  .mode-pill { font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
+  .mode-pill.live { background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
+  .mode-pill.preview { background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); }
+
+  .tabs-nav { display: flex; gap: 4px; margin: 18px 0 24px; border-bottom: 1px solid var(--rule); overflow-x: auto; }
+  .tab-btn { font-weight: 700; font-size: 14.5px; color: var(--ink-soft); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; padding: 11px 14px 10px; white-space: nowrap; }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; flex-wrap: wrap; }
+  .section-head h2 { font-size: clamp(20px, 4vw, 24px); margin: 0; }
+  .section-sub { color: var(--ink-soft); font-size: 14px; margin: 0 0 18px; }
+
+  .feature-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 16px; padding: 22px 24px; margin-bottom: 26px; box-shadow: var(--shadow); }
+  .feature-card .fc-eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+  .feature-card h3 { font-family: Georgia, serif; font-size: 22px; margin: 6px 0 4px; }
+  .feature-card .fc-meta { color: var(--ink-soft); font-size: 13px; }
+  .progress-track { height: 8px; border-radius: 999px; background: var(--rule); margin: 14px 0 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--teal); border-radius: 999px; transition: width 0.3s ease; }
+  .progress-label { font-size: 12px; color: var(--ink-soft); }
+
+  .timeline { list-style: none; margin: 16px 0 0; padding: 0; }
+  .timeline li { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-top: 1px dotted var(--rule); }
+  .timeline li:first-child { border-top: none; }
+  .timeline .ti-check { flex-shrink: 0; margin-top: 2px; }
+  .timeline .ti-text.done { text-decoration: line-through; color: var(--ink-soft); }
+  .timeline .ti-meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+  .goal-badge { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 10.5px; padding: 1px 7px; border-radius: 5px; background: color-mix(in srgb, var(--gold) 14%, transparent); color: var(--gold); }
+
+  .section-group { margin-bottom: 30px; }
+  .section-group h4 { font-family: Georgia, serif; font-size: 16.5px; margin: 0 0 10px; }
+  .card-grid { display: grid; gap: 12px; }
+  .item-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 15px 18px; }
+  .item-card .ic-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .item-card .ic-title { font-family: Georgia, serif; font-weight: 700; font-size: 16px; }
+  .badge { font-size: 10.5px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .badge.assign { background: color-mix(in srgb, var(--navy) 10%, transparent); color: var(--ink); }
+  .badge.status-notstarted { background: color-mix(in srgb, var(--ink-soft) 16%, transparent); color: var(--ink-soft); }
+  .badge.status-inprogress { background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); }
+  .badge.status-done, .badge.status-resolved { background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
+  .badge.status-submitted { background: color-mix(in srgb, var(--red) 14%, transparent); color: var(--red); }
+  .ic-meta { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+  .ic-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn { font-weight: 700; font-size: 12.5px; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); cursor: pointer; }
+  .btn:hover { border-color: var(--gold); color: var(--gold); }
+  .btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .btn.primary:hover { opacity: 0.9; color: #fff; }
+
+  .checklist { list-style: none; margin: 10px 0 0; padding: 10px 0 0; border-top: 1px dashed var(--rule); }
+  .checklist li { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 13.5px; }
+  .checklist li label.done { text-decoration: line-through; color: var(--ink-soft); }
+
+  .add-form { background: var(--surface); border: 1px dashed var(--rule); border-radius: 12px; padding: 14px 16px; margin-top: 6px; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); align-items: end; }
+  .add-form label { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); font-weight: 700; margin-bottom: 4px; }
+  .add-form input, .add-form select { width: 100%; padding: 7px 9px; border-radius: 7px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
+  .add-form .full { grid-column: 1 / -1; }
+
+  .fin-summary { width: 100%; border-collapse: collapse; margin: 14px 0 26px; font-size: 14px; }
+  .fin-summary th, .fin-summary td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+  .fin-summary th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
+  .fin-summary td.num { font-family: "SF Mono", ui-monospace, Menlo, monospace; text-align: right; }
+  .fin-summary tr.total td { font-weight: 700; border-top: 2px solid var(--rule); border-bottom: none; }
+
+  .payment-log { list-style: none; margin: 10px 0 0; padding: 0; }
+  .payment-log li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px dotted var(--rule); font-size: 13.5px; }
+  .payment-log li:first-child { border-top: none; }
+
+  .empty { color: var(--ink-soft); font-size: 13.5px; font-style: italic; padding: 8px 0; }
+  .banner { border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 18px; border: 1px solid; }
+  .banner.preview { background: color-mix(in srgb, var(--gold) 8%, var(--surface)); border-color: color-mix(in srgb, var(--gold) 35%, var(--rule)); color: var(--ink); }
+  footer { border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 30px; font-size: 12px; color: var(--ink-soft); }
+</style>
+
+<div class="page">
+  <div class="topbar">
+    <div>
+      <h1 class="display">Apartment HQ</h1>
+      <div class="sub">Kyle &amp; Matt — chores, building management, communal items, finances</div>
+    </div>
+    <div class="whoami">
+      <span id="modePill" class="mode-pill preview">Preview mode</span>
+      <select id="whoSelect">
+        <option value="Kyle">I'm Kyle</option>
+        <option value="Matt">I'm Matt</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="previewBanner" class="banner preview" style="display:none;">
+    <b>Preview mode.</b> This is running on sample data in your browser — nothing you click here saves anywhere yet. Deploy the Apps Script backend and paste the URL into <span class="mono">API_URL</span> at the top of this file's script to make it live and shared with Matt.
+  </div>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="chores">Chores</button>
+    <button class="tab-btn" data-tab="management">Building Management</button>
+    <button class="tab-btn" data-tab="communal">Communal Items</button>
+    <button class="tab-btn" data-tab="finances">Finances</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-chores">
+    <div id="refreshFeature"></div>
+    <div class="section-head"><h2 class="display">Recurring &amp; One-off Chores</h2></div>
+    <p class="section-sub">Grouped by area. Tap a chore to see its checklist and mark it done.</p>
+    <div id="choresBySection"></div>
+    <div class="section-group">
+      <h4>Add a chore</h4>
+      <div class="add-form">
+        <div class="full"><label>Name</label><input id="chore-name" placeholder="e.g. Vacuum living room"></div>
+        <div><label>Type</label><select id="chore-type"><option>Recurring</option><option>One-off</option></select></div>
+        <div><label>Section</label><select id="chore-section"></select></div>
+        <div><label>Assigned To</label><select id="chore-assigned"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
+        <div><label>Cadence</label><input id="chore-cadence" placeholder="e.g. Monthly"></div>
+        <div><button class="btn primary" onclick="addChore()">Add Chore</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-management">
+    <div class="section-head"><h2 class="display">Building Management</h2></div>
+    <p class="section-sub">Anything that needs the landlord or property management — tracked separately from chores.</p>
+    <div id="managementList" class="card-grid"></div>
+    <div class="section-group">
+      <h4>Log a new item</h4>
+      <div class="add-form">
+        <div class="full"><label>Name</label><input id="mgmt-name" placeholder="e.g. Fix leaking faucet"></div>
+        <div><label>Section</label><select id="mgmt-section"></select></div>
+        <div><label>Contacted Management?</label><select id="mgmt-contacted"><option>No</option><option>Yes</option></select></div>
+        <div><label>Contacted By</label><select id="mgmt-by"><option>Kyle</option><option>Matt</option><option>Everyone</option></select></div>
+        <div><label>Method</label><select id="mgmt-method"><option>Online Portal</option><option>Text</option></select></div>
+        <div class="full"><label>Notes</label><input id="mgmt-notes" placeholder="Optional"></div>
+        <div><button class="btn primary" onclick="addManagementItem()">Log Item</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-communal">
+    <div class="section-head"><h2 class="display">Communal Items</h2></div>
+    <p class="section-sub">Shared consumables — paper towels, toilet paper, cleaning products, trash bags. Next-due is estimated from your typical buying cadence.</p>
+    <div id="communalList" class="card-grid"></div>
+    <div class="section-group">
+      <h4>Add a communal item</h4>
+      <div class="add-form">
+        <div class="full"><label>Item</label><input id="comm-name" placeholder="e.g. Dish Soap"></div>
+        <div><label>Section</label><select id="comm-section"></select></div>
+        <div><label>Typical Cadence (days)</label><input id="comm-cadence" type="number" placeholder="e.g. 21"></div>
+        <div><button class="btn primary" onclick="addCommunalItem()">Add Item</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-finances">
+    <div class="section-head"><h2 class="display">Finances</h2></div>
+    <p class="section-sub">Recurring bills and the running Kyle-vs-Matt total, computed live from every payment logged below.</p>
+    <table class="fin-summary" id="finSummaryTable"></table>
+    <div class="section-group">
+      <h4>Log a payment</h4>
+      <div class="add-form">
+        <div><label>Bill</label><select id="pay-bill"></select></div>
+        <div><label>Amount</label><input id="pay-amount" type="number" step="0.01" placeholder="0.00"></div>
+        <div><label>Paid By</label><select id="pay-by"><option>Kyle</option><option>Matt</option></select></div>
+        <div><label>Date</label><input id="pay-date" type="date"></div>
+        <div><label>Period</label><input id="pay-period" placeholder="e.g. 2026-08"></div>
+        <div><button class="btn primary" onclick="addPayment()">Log Payment</button></div>
+      </div>
+    </div>
+    <div class="section-group">
+      <h4>Payment History</h4>
+      <ul class="payment-log" id="paymentLog"></ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>Apartment HQ — built for Kyle &amp; Matt. Data lives in a Google Sheet behind the scenes; this page is just the front end.</p>
+  </footer>
+</div>
+
+<script>
+// ============================== CONFIG ==============================
+// Paste your deployed Apps Script /exec URL here to go live. Leave blank for preview mode.
+const API_URL = "";
+const SECTIONS = ["Living Room", "Foyer", "Bathroom", "Kitchen", "Backyard", "Whole Apartment"];
+const REFRESH_CHORE_ID = "6"; // "2026 Apartment Refresh" — matches Chores.ID in the seed data
+
+// ============================== SEED / PREVIEW DATA ==============================
+const SEED = {
+  Chores: [
+    {ID:"1",Name:"Deep Clean Bathroom",Type:"Recurring",Section:"Bathroom",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:"See checklist for sub-steps"},
+    {ID:"2",Name:"Mop",Type:"Recurring",Section:"Whole Apartment",AssignedTo:"Everyone",Cadence:"Weekly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"3",Name:"Organize Tupperware",Type:"One-off",Section:"Kitchen",AssignedTo:"Kyle",Cadence:"One-time",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"4",Name:"Deep Clean Fridge",Type:"Recurring",Section:"Kitchen",AssignedTo:"Matt",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"5",Name:"Clean Backyard",Type:"Recurring",Section:"Backyard",AssignedTo:"Everyone",Cadence:"Monthly",TimelineStart:"",TimelineDue:"",Status:"Not Started",Notes:""},
+    {ID:"6",Name:"2026 Apartment Refresh",Type:"One-off",Section:"Living Room",AssignedTo:"Everyone",Cadence:"One-time",TimelineStart:"TBD",TimelineDue:"TBD",Status:"In Progress",Notes:"Furniture swap + wallpaper — see checklist for the full plan and goal dates"},
+  ],
+  ManagementItems: [],
+  ChecklistItems: [
+    {ID:"1",ParentType:"Chore",ParentID:"1",ItemText:"Scrub shower",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"1"},
+    {ID:"2",ParentType:"Chore",ParentID:"1",ItemText:"Scrub toilet",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"2"},
+    {ID:"3",ParentType:"Chore",ParentID:"1",ItemText:"Wipe mirror",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"3"},
+    {ID:"4",ParentType:"Chore",ParentID:"1",ItemText:"Mop bathroom floor",AssignedTo:"",GoalDate:"",Done:"FALSE",SortOrder:"4"},
+    {ID:"5",ParentType:"Chore",ParentID:"6",ItemText:"Sell old couch, coffee table, TV stand",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"1"},
+    {ID:"6",ParentType:"Chore",ParentID:"6",ItemText:"Buy new couch",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"2"},
+    {ID:"7",ParentType:"Chore",ParentID:"6",ItemText:"Buy new coffee table",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"3"},
+    {ID:"8",ParentType:"Chore",ParentID:"6",ItemText:"Buy new TV stand",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"4"},
+    {ID:"9",ParentType:"Chore",ParentID:"6",ItemText:"Remove old curtains",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"5"},
+    {ID:"10",ParentType:"Chore",ParentID:"6",ItemText:"Redo wallpaper",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"6"},
+    {ID:"11",ParentType:"Chore",ParentID:"6",ItemText:"Move gym equipment out of living room",AssignedTo:"",GoalDate:"TBD",Done:"FALSE",SortOrder:"7"},
+  ],
+  History: [],
+  CommunalItems: [
+    {ID:"1",ItemName:"Paper Towels",Section:"Whole Apartment",TypicalCadenceDays:"21",LastBoughtDate:"",LastBoughtBy:"",Notes:""},
+    {ID:"2",ItemName:"Toilet Paper",Section:"Whole Apartment",TypicalCadenceDays:"21",LastBoughtDate:"",LastBoughtBy:"",Notes:""},
+    {ID:"3",ItemName:"Cleaning Products",Section:"Whole Apartment",TypicalCadenceDays:"30",LastBoughtDate:"",LastBoughtBy:"",Notes:""},
+    {ID:"4",ItemName:"Trash Bags",Section:"Whole Apartment",TypicalCadenceDays:"30",LastBoughtDate:"",LastBoughtBy:"",Notes:""},
+  ],
+  CommunalItemHistory: [],
+  Bills: [
+    {ID:"1",BillName:"Rent",TypicalAmount:"TBD",DueDayOfMonth:"1",SplitNote:"Split 50/50 — exact amount TBD",Category:"Housing"},
+    {ID:"2",BillName:"Electricity",TypicalAmount:"",DueDayOfMonth:"15",SplitNote:"Varies monthly",Category:"Utilities"},
+    {ID:"3",BillName:"Internet (Spectrum)",TypicalAmount:"110",DueDayOfMonth:"1",SplitNote:"Split 50/50 (~$55 each)",Category:"Utilities"},
+  ],
+  Payments: [],
+};
+
+// ============================== STATE ==============================
+let DATA = null;
+
+function cloneSeed() { return JSON.parse(JSON.stringify(SEED)); }
+
+async function loadAll() {
+  if (!API_URL) {
+    DATA = cloneSeed();
+    document.getElementById('modePill').textContent = 'Preview mode';
+    document.getElementById('modePill').className = 'mode-pill preview';
+    document.getElementById('previewBanner').style.display = 'block';
+    return;
+  }
+  try {
+    const res = await fetch(API_URL);
+    DATA = await res.json();
+    document.getElementById('modePill').textContent = 'Live';
+    document.getElementById('modePill').className = 'mode-pill live';
+    document.getElementById('previewBanner').style.display = 'none';
+  } catch (err) {
+    console.error('Load failed, falling back to preview data', err);
+    DATA = cloneSeed();
+    document.getElementById('modePill').textContent = 'Preview mode (load failed)';
+    document.getElementById('modePill').className = 'mode-pill preview';
+    document.getElementById('previewBanner').style.display = 'block';
+  }
+}
+
+async function apiWrite(sheet, action, payload) {
+  if (!API_URL) {
+    // Preview mode: mutate in-memory only, nothing persists on reload.
+    applyLocalMutation(sheet, action, payload);
+    return { ok: true, local: true };
+  }
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ sheet, action }, payload)),
+  });
+  const json = await res.json();
+  if (json.error) { alert('Save failed: ' + json.error); throw new Error(json.error); }
+  return json;
+}
+
+function applyLocalMutation(sheet, action, payload) {
+  const rows = DATA[sheet];
+  if (action === 'append') {
+    const maxId = rows.reduce((m, r) => Math.max(m, parseInt(r.ID, 10) || 0), 0);
+    const row = Object.assign({ ID: String(maxId + 1) }, payload.data);
+    rows.push(row);
+  } else if (action === 'update') {
+    const row = rows.find(r => String(r.ID) === String(payload.id));
+    if (row) Object.assign(row, payload.data);
+  }
+}
+
+function who() { return document.getElementById('whoSelect').value; }
+
+// ============================== HELPERS ==============================
+function byParent(rows, type, id) { return rows.filter(r => r.ParentType === type && String(r.ParentID) === String(id)); }
+function isTrue(v) { return v === true || v === 'TRUE' || v === 'true'; }
+function fmtDate(d) { if (!d || d === 'TBD') return d || '—'; return d; }
+function lastCompleted(choreId) {
+  const rows = DATA.History.filter(h => String(h.ChoreID) === String(choreId));
+  if (!rows.length) return null;
+  rows.sort((a, b) => (a.CompletedDate < b.CompletedDate ? 1 : -1));
+  return rows[0];
+}
+function statusClass(s) { return 'status-' + String(s || '').toLowerCase().replace(/\s+/g, ''); }
+
+// ============================== RENDER: CHORES ==============================
+function renderChores() {
+  const refreshChore = DATA.Chores.find(c => c.ID === REFRESH_CHORE_ID);
+  const featureEl = document.getElementById('refreshFeature');
+  featureEl.innerHTML = '';
+  if (refreshChore) {
+    const items = byParent(DATA.ChecklistItems, 'Chore', refreshChore.ID).sort((a, b) => (a.SortOrder || 0) - (b.SortOrder || 0));
+    const doneCount = items.filter(i => isTrue(i.Done)).length;
+    const pct = items.length ? Math.round((doneCount / items.length) * 100) : 0;
+    const card = document.createElement('div');
+    card.className = 'feature-card';
+    card.innerHTML = `
+      <div class="fc-eyebrow">Flagship Project</div>
+      <h3>${refreshChore.Name}</h3>
+      <div class="fc-meta">${refreshChore.Section} · Assigned ${refreshChore.AssignedTo} · Timeline ${fmtDate(refreshChore.TimelineStart)} → ${fmtDate(refreshChore.TimelineDue)} · <span class="badge status-${statusClass(refreshChore.Status)}">${refreshChore.Status}</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-label">${doneCount} of ${items.length} steps done</div>
+      <ul class="timeline">
+        ${items.map(i => `
+          <li>
+            <input type="checkbox" class="ti-check" ${isTrue(i.Done) ? 'checked' : ''} onchange="toggleChecklist('${i.ID}', this.checked)">
+            <div>
+              <div class="ti-text ${isTrue(i.Done) ? 'done' : ''}">${i.ItemText}</div>
+              <div class="ti-meta">${i.GoalDate ? `<span class="goal-badge">Goal: ${fmtDate(i.GoalDate)}</span>` : ''} ${i.AssignedTo ? ' · ' + i.AssignedTo : ''}</div>
+            </div>
+          </li>`).join('')}
+      </ul>`;
+    featureEl.appendChild(card);
+  }
+
+  const container = document.getElementById('choresBySection');
+  container.innerHTML = '';
+  const chores = DATA.Chores.filter(c => c.ID !== REFRESH_CHORE_ID);
+  SECTIONS.forEach(section => {
+    const inSection = chores.filter(c => c.Section === section);
+    if (!inSection.length) return;
+    const group = document.createElement('div');
+    group.className = 'section-group';
+    group.innerHTML = `<h4>${section}</h4><div class="card-grid" id="chore-sec-${section.replace(/\s+/g,'-')}"></div>`;
+    container.appendChild(group);
+    const grid = group.querySelector('.card-grid');
+    inSection.forEach(chore => grid.appendChild(renderChoreCard(chore)));
+  });
+}
+
+function renderChoreCard(chore) {
+  const items = byParent(DATA.ChecklistItems, 'Chore', chore.ID).sort((a, b) => (a.SortOrder || 0) - (b.SortOrder || 0));
+  const last = lastCompleted(chore.ID);
+  const el = document.createElement('div');
+  el.className = 'item-card';
+  el.innerHTML = `
+    <div class="ic-head">
+      <div class="ic-title">${chore.Name}</div>
+      <span class="badge assign">${chore.AssignedTo}</span>
+    </div>
+    <div class="ic-meta">${chore.Type}${chore.Cadence ? ' · ' + chore.Cadence : ''} <span class="badge ${statusClass(chore.Status)}">${chore.Status}</span></div>
+    <div class="ic-meta">${last ? `Last done: ${fmtDate(last.CompletedDate)} by ${last.CompletedBy}` : 'Never logged yet'}</div>
+    ${items.length ? `<ul class="checklist">${items.map(i => `
+      <li><input type="checkbox" ${isTrue(i.Done) ? 'checked' : ''} onchange="toggleChecklist('${i.ID}', this.checked)"><label class="${isTrue(i.Done) ? 'done' : ''}">${i.ItemText}</label></li>`).join('')}</ul>` : ''}
+    <div class="ic-actions">
+      <button class="btn primary" onclick="markChoreDone('${chore.ID}')">Mark Done</button>
+    </div>`;
+  return el;
+}
+
+async function toggleChecklist(id, done) {
+  await apiWrite('ChecklistItems', 'update', { id, data: { Done: done ? 'TRUE' : 'FALSE' } });
+  const row = DATA.ChecklistItems.find(r => String(r.ID) === String(id));
+  if (row) row.Done = done ? 'TRUE' : 'FALSE';
+  renderChores();
+}
+
+async function markChoreDone(choreId) {
+  const by = who();
+  const chore = DATA.Chores.find(c => String(c.ID) === String(choreId));
+  const today = new Date().toISOString().slice(0, 10);
+  const res = await apiWrite('History', 'append', { data: { ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' } });
+  DATA.History.push(res.row || { ID: String(Date.now()), ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' });
+  renderChores();
+}
+
+async function addChore() {
+  const name = document.getElementById('chore-name').value.trim();
+  if (!name) return;
+  const data = {
+    Name: name,
+    Type: document.getElementById('chore-type').value,
+    Section: document.getElementById('chore-section').value,
+    AssignedTo: document.getElementById('chore-assigned').value,
+    Cadence: document.getElementById('chore-cadence').value,
+    TimelineStart: '', TimelineDue: '', Status: 'Not Started', Notes: '',
+  };
+  const res = await apiWrite('Chores', 'append', { data });
+  DATA.Chores.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+  document.getElementById('chore-name').value = '';
+  document.getElementById('chore-cadence').value = '';
+  renderChores();
+}
+
+// ============================== RENDER: MANAGEMENT ==============================
+function renderManagement() {
+  const el = document.getElementById('managementList');
+  el.innerHTML = '';
+  if (!DATA.ManagementItems.length) { el.innerHTML = '<div class="empty">Nothing logged yet — add an item below.</div>'; return; }
+  DATA.ManagementItems.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = `
+      <div class="ic-head"><div class="ic-title">${item.Name}</div><span class="badge ${statusClass(item.Status)}">${item.Status}</span></div>
+      <div class="ic-meta">${item.Section} · Contacted: ${item.ContactedManagement}${item.ContactedBy ? ' by ' + item.ContactedBy : ''}${item.Method ? ' via ' + item.Method : ''}${item.DateContacted ? ' on ' + fmtDate(item.DateContacted) : ''}</div>
+      ${item.Notes ? `<div class="ic-meta">${item.Notes}</div>` : ''}
+      <div class="ic-actions">
+        <button class="btn" onclick="cycleManagementStatus('${item.ID}')">Advance Status</button>
+      </div>`;
+    el.appendChild(card);
+  });
+}
+
+async function cycleManagementStatus(id) {
+  const order = ['Not Started', 'Submitted', 'In Progress', 'Resolved'];
+  const item = DATA.ManagementItems.find(r => String(r.ID) === String(id));
+  const next = order[(order.indexOf(item.Status) + 1) % order.length];
+  await apiWrite('ManagementItems', 'update', { id, data: { Status: next } });
+  item.Status = next;
+  renderManagement();
+}
+
+async function addManagementItem() {
+  const name = document.getElementById('mgmt-name').value.trim();
+  if (!name) return;
+  const contacted = document.getElementById('mgmt-contacted').value;
+  const data = {
+    Name: name,
+    Section: document.getElementById('mgmt-section').value,
+    ContactedManagement: contacted,
+    ContactedBy: contacted === 'Yes' ? document.getElementById('mgmt-by').value : '',
+    Method: contacted === 'Yes' ? document.getElementById('mgmt-method').value : '',
+    DateContacted: contacted === 'Yes' ? new Date().toISOString().slice(0, 10) : '',
+    Status: contacted === 'Yes' ? 'Submitted' : 'Not Started',
+    Notes: document.getElementById('mgmt-notes').value.trim(),
+  };
+  const res = await apiWrite('ManagementItems', 'append', { data });
+  DATA.ManagementItems.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+  document.getElementById('mgmt-name').value = '';
+  document.getElementById('mgmt-notes').value = '';
+  renderManagement();
+}
+
+// ============================== RENDER: COMMUNAL ==============================
+function nextDueInfo(item) {
+  if (!item.LastBoughtDate || !item.TypicalCadenceDays) return { label: 'No purchase logged yet', cls: '' };
+  const last = new Date(item.LastBoughtDate);
+  const days = parseInt(item.TypicalCadenceDays, 10) || 0;
+  const due = new Date(last.getTime() + days * 86400000);
+  const today = new Date();
+  const diffDays = Math.round((due - today) / 86400000);
+  if (diffDays < 0) return { label: `Overdue by ${Math.abs(diffDays)}d`, cls: 'color:var(--red);font-weight:700;' };
+  if (diffDays <= 5) return { label: `Due in ${diffDays}d`, cls: 'color:var(--gold);font-weight:700;' };
+  return { label: `Due in ${diffDays}d`, cls: 'color:var(--teal);' };
+}
+
+function renderCommunal() {
+  const el = document.getElementById('communalList');
+  el.innerHTML = '';
+  DATA.CommunalItems.forEach(item => {
+    const due = nextDueInfo(item);
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = `
+      <div class="ic-head"><div class="ic-title">${item.ItemName}</div><span class="badge assign">${item.Section}</span></div>
+      <div class="ic-meta">${item.LastBoughtDate ? `Last bought ${fmtDate(item.LastBoughtDate)} by ${item.LastBoughtBy}` : 'Never bought yet'}</div>
+      <div class="ic-meta" style="${due.cls}">${due.label}</div>
+      <div class="ic-actions"><button class="btn primary" onclick="markBought('${item.ID}')">Mark Bought</button></div>`;
+    el.appendChild(card);
+  });
+}
+
+async function markBought(id) {
+  const by = who();
+  const today = new Date().toISOString().slice(0, 10);
+  const item = DATA.CommunalItems.find(r => String(r.ID) === String(id));
+  await apiWrite('CommunalItemHistory', 'append', { data: { ItemName: item.ItemName, BoughtBy: by, Date: today, Price: '', Notes: '' } });
+  await apiWrite('CommunalItems', 'update', { id, data: { LastBoughtDate: today, LastBoughtBy: by } });
+  item.LastBoughtDate = today; item.LastBoughtBy = by;
+  renderCommunal();
+}
+
+async function addCommunalItem() {
+  const name = document.getElementById('comm-name').value.trim();
+  if (!name) return;
+  const data = {
+    ItemName: name,
+    Section: document.getElementById('comm-section').value,
+    TypicalCadenceDays: document.getElementById('comm-cadence').value || '30',
+    LastBoughtDate: '', LastBoughtBy: '', Notes: '',
+  };
+  const res = await apiWrite('CommunalItems', 'append', { data });
+  DATA.CommunalItems.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+  document.getElementById('comm-name').value = '';
+  document.getElementById('comm-cadence').value = '';
+  renderCommunal();
+}
+
+// ============================== RENDER: FINANCES ==============================
+function renderFinances() {
+  const table = document.getElementById('finSummaryTable');
+  const bills = DATA.Bills.map(b => b.BillName);
+  let kyleTotal = 0, mattTotal = 0;
+  let rows = bills.map(name => {
+    const kyle = DATA.Payments.filter(p => p.BillName === name && p.PaidBy === 'Kyle').reduce((s, p) => s + (parseFloat(p.AmountPaid) || 0), 0);
+    const matt = DATA.Payments.filter(p => p.BillName === name && p.PaidBy === 'Matt').reduce((s, p) => s + (parseFloat(p.AmountPaid) || 0), 0);
+    kyleTotal += kyle; mattTotal += matt;
+    return `<tr><td>${name}</td><td class="num">$${kyle.toFixed(2)}</td><td class="num">$${matt.toFixed(2)}</td><td class="num">$${(kyle + matt).toFixed(2)}</td></tr>`;
+  }).join('');
+  table.innerHTML = `
+    <tr><th>Bill</th><th>Kyle Paid</th><th>Matt Paid</th><th>Combined</th></tr>
+    ${rows}
+    <tr class="total"><td>Total</td><td class="num">$${kyleTotal.toFixed(2)}</td><td class="num">$${mattTotal.toFixed(2)}</td><td class="num">$${(kyleTotal + mattTotal).toFixed(2)}</td></tr>`;
+
+  const billSelect = document.getElementById('pay-bill');
+  billSelect.innerHTML = DATA.Bills.map(b => `<option>${b.BillName}</option>`).join('');
+
+  const log = document.getElementById('paymentLog');
+  const sorted = [...DATA.Payments].sort((a, b) => (a.DatePaid < b.DatePaid ? 1 : -1));
+  log.innerHTML = sorted.length ? sorted.map(p => `<li><span>${p.BillName} — ${p.PaidBy}</span><span class="mono">$${parseFloat(p.AmountPaid || 0).toFixed(2)} · ${fmtDate(p.DatePaid)}</span></li>`).join('') : '<div class="empty">No payments logged yet.</div>';
+}
+
+async function addPayment() {
+  const amount = document.getElementById('pay-amount').value;
+  if (!amount) return;
+  const data = {
+    BillName: document.getElementById('pay-bill').value,
+    AmountPaid: amount,
+    PaidBy: document.getElementById('pay-by').value,
+    DatePaid: document.getElementById('pay-date').value || new Date().toISOString().slice(0, 10),
+    Period: document.getElementById('pay-period').value,
+    Notes: '',
+  };
+  const res = await apiWrite('Payments', 'append', { data });
+  DATA.Payments.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
+  document.getElementById('pay-amount').value = '';
+  document.getElementById('pay-period').value = '';
+  renderFinances();
+}
+
+// ============================== TABS + INIT ==============================
+function initSectionSelects() {
+  ['chore-section', 'mgmt-section', 'comm-section'].forEach(id => {
+    document.getElementById(id).innerHTML = SECTIONS.map(s => `<option>${s}</option>`).join('');
+  });
+}
+
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+}
+
+function renderAll() {
+  renderChores();
+  renderManagement();
+  renderCommunal();
+  renderFinances();
+}
+
+(async function init() {
+  const savedWho = localStorage.getItem('apartmentHQ_whoami');
+  if (savedWho) document.getElementById('whoSelect').value = savedWho;
+  document.getElementById('whoSelect').addEventListener('change', e => localStorage.setItem('apartmentHQ_whoami', e.target.value));
+  document.getElementById('pay-date').value = new Date().toISOString().slice(0, 10);
+  initSectionSelects();
+  initTabs();
+  await loadAll();
+  renderAll();
+})();
+</script>
