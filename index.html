@@ -2,149 +2,176 @@
 <title>Apartment HQ — Kyle &amp; Matt</title>
 <style>
   :root {
-    --bg: #F1EFE8; --ink: #202536; --ink-soft: #60636F; --surface: #FFFFFF; --rule: #DEDACD;
-    --teal: #226B5B; --gold: #A9781F; --red: #B4432F; --navy: #202536; --shadow: 0 1px 0 rgba(27,33,49,0.06);
+    --bg: #FBF7FF; --surface: #FFFFFF; --ink: #241E3D; --ink-soft: #756E93; --rule: #E9E1F9;
+    --teal: #00C2A8; --coral: #FF6B5B; --yellow: #E8A100; --purple: #8B5CF6; --pink: #FF4FA3;
+    --shadow: 0 4px 14px rgba(139,92,246,0.10);
   }
   :root[data-theme="dark"] {
-    --bg: #12141E; --ink: #EAE8E0; --ink-soft: #9A9DB0; --surface: #1A1D2A; --rule: #2A2E40;
-    --teal: #3FBFA0; --gold: #D4A24C; --red: #E27A63; --navy: #EAE8E0; --shadow: 0 1px 0 rgba(0,0,0,0.4);
+    --bg: #17122B; --surface: #241D3F; --ink: #F3EFFF; --ink-soft: #B3A9D4; --rule: #3A2F5C;
+    --teal: #2DE8CC; --coral: #FF8B7D; --yellow: #FFD166; --purple: #A78BFA; --pink: #FF7AC0;
+    --shadow: 0 4px 16px rgba(0,0,0,0.35);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #12141E; --ink: #EAE8E0; --ink-soft: #9A9DB0; --surface: #1A1D2A; --rule: #2A2E40;
-      --teal: #3FBFA0; --gold: #D4A24C; --red: #E27A63; --navy: #EAE8E0; --shadow: 0 1px 0 rgba(0,0,0,0.4);
+      --bg: #17122B; --surface: #241D3F; --ink: #F3EFFF; --ink-soft: #B3A9D4; --rule: #3A2F5C;
+      --teal: #2DE8CC; --coral: #FF8B7D; --yellow: #FFD166; --purple: #A78BFA; --pink: #FF7AC0;
+      --shadow: 0 4px 16px rgba(0,0,0,0.35);
     }
   }
   * { box-sizing: border-box; }
   html, body { background: var(--bg); color: var(--ink); margin: 0; padding: 0; }
   body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-  .page { max-width: 920px; margin: 0 auto; padding: 0 22px 100px; }
+  .page { max-width: 940px; margin: 0 auto; padding: 0 22px 100px; }
   .display { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 700; }
   .mono { font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
   button, select, input, textarea { font-family: inherit; font-size: 14px; }
 
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 0 10px; gap: 12px; flex-wrap: wrap; }
-  .topbar h1 { font-size: clamp(22px, 4vw, 28px); margin: 0; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 24px 0 10px; gap: 12px; flex-wrap: wrap; }
+  .topbar h1 { font-size: clamp(26px, 5vw, 34px); margin: 0; background: linear-gradient(90deg, var(--teal), var(--purple) 55%, var(--coral)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .topbar .sub { color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
   .whoami { display: flex; align-items: center; gap: 8px; }
-  .whoami select { padding: 7px 10px; border-radius: 8px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); font-weight: 700; }
-  .mode-pill { font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
-  .mode-pill.live { background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
-  .mode-pill.preview { background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); }
+  .whoami select { padding: 8px 12px; border-radius: 999px; border: 2px solid var(--purple); background: var(--surface); color: var(--purple); font-weight: 700; }
+  .mode-pill { font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+  .mode-pill.live { background: color-mix(in srgb, var(--teal) 20%, transparent); color: var(--teal); }
+  .mode-pill.preview { background: color-mix(in srgb, var(--yellow) 22%, transparent); color: var(--yellow); }
 
-  .tabs-nav { display: flex; gap: 4px; margin: 18px 0 24px; border-bottom: 1px solid var(--rule); overflow-x: auto; }
-  .tab-btn { font-weight: 700; font-size: 14.5px; color: var(--ink-soft); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; padding: 11px 14px 10px; white-space: nowrap; }
-  .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+  .tabs-nav { display: flex; gap: 6px; margin: 18px 0 26px; overflow-x: auto; padding-bottom: 2px; }
+  .tab-btn { font-weight: 700; font-size: 14px; color: var(--ink-soft); border: 2px solid transparent; background: color-mix(in srgb, var(--purple) 6%, transparent); cursor: pointer; border-radius: 999px; padding: 9px 16px; white-space: nowrap; transition: all 0.15s ease; }
+  .tab-btn:hover { color: var(--purple); }
+  .tab-btn.active { color: #fff; background: linear-gradient(90deg, var(--purple), var(--pink)); border-color: transparent; box-shadow: var(--shadow); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
   .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; flex-wrap: wrap; }
-  .section-head h2 { font-size: clamp(20px, 4vw, 24px); margin: 0; }
+  .section-head h2 { font-size: clamp(22px, 4vw, 27px); margin: 0; }
   .section-sub { color: var(--ink-soft); font-size: 14px; margin: 0 0 18px; }
 
-  .feature-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 16px; padding: 22px 24px; margin-bottom: 26px; box-shadow: var(--shadow); }
-  .feature-card .fc-eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
-  .feature-card h3 { font-family: Georgia, serif; font-size: 22px; margin: 6px 0 4px; }
+  .feature-card { background: var(--surface); border: 2px solid var(--rule); border-radius: 20px; padding: 24px 26px; margin-bottom: 26px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  .feature-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, var(--teal), var(--purple), var(--coral)); }
+  .feature-card .fc-eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); font-weight: 800; }
+  .feature-card h3 { font-family: Georgia, serif; font-size: 24px; margin: 6px 0 4px; }
   .feature-card .fc-meta { color: var(--ink-soft); font-size: 13px; }
-  .progress-track { height: 8px; border-radius: 999px; background: var(--rule); margin: 14px 0 4px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--teal); border-radius: 999px; transition: width 0.3s ease; }
-  .progress-label { font-size: 12px; color: var(--ink-soft); }
+  .progress-track { height: 10px; border-radius: 999px; background: var(--rule); margin: 14px 0 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--purple)); border-radius: 999px; transition: width 0.3s ease; }
+  .progress-label { font-size: 12px; color: var(--ink-soft); font-weight: 700; }
 
   .timeline { list-style: none; margin: 16px 0 0; padding: 0; }
-  .timeline li { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-top: 1px dotted var(--rule); }
+  .timeline li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-top: 1px dashed var(--rule); }
   .timeline li:first-child { border-top: none; }
-  .timeline .ti-check { flex-shrink: 0; margin-top: 2px; }
+  .timeline .ti-check { flex-shrink: 0; margin-top: 2px; width: 18px; height: 18px; accent-color: var(--purple); }
   .timeline .ti-text.done { text-decoration: line-through; color: var(--ink-soft); }
   .timeline .ti-meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
-  .goal-badge { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 10.5px; padding: 1px 7px; border-radius: 5px; background: color-mix(in srgb, var(--gold) 14%, transparent); color: var(--gold); }
+  .goal-badge { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 10.5px; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--yellow) 22%, transparent); color: var(--yellow); font-weight: 700; }
 
   .section-group { margin-bottom: 30px; }
-  .section-group h4 { font-family: Georgia, serif; font-size: 16.5px; margin: 0 0 10px; }
+  .section-group h4 { font-family: Georgia, serif; font-size: 17px; margin: 0 0 10px; }
   .card-grid { display: grid; gap: 12px; }
-  .item-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 15px 18px; }
+  .item-card { background: var(--surface); border: 2px solid var(--rule); border-radius: 16px; padding: 16px 18px; }
   .item-card .ic-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .item-card .ic-title { font-family: Georgia, serif; font-weight: 700; font-size: 16px; }
-  .badge { font-size: 10.5px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
-  .badge.assign { background: color-mix(in srgb, var(--navy) 10%, transparent); color: var(--ink); }
-  .badge.status-notstarted { background: color-mix(in srgb, var(--ink-soft) 16%, transparent); color: var(--ink-soft); }
-  .badge.status-inprogress { background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); }
-  .badge.status-done, .badge.status-resolved { background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
-  .badge.status-submitted { background: color-mix(in srgb, var(--red) 14%, transparent); color: var(--red); }
+  .badge { font-size: 10.5px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+  .badge.person-kyle { background: color-mix(in srgb, var(--coral) 20%, transparent); color: var(--coral); }
+  .badge.person-matt { background: color-mix(in srgb, var(--teal) 20%, transparent); color: var(--teal); }
+  .badge.person-everyone { background: color-mix(in srgb, var(--purple) 20%, transparent); color: var(--purple); }
+  .badge.status-notstarted { background: color-mix(in srgb, var(--ink-soft) 18%, transparent); color: var(--ink-soft); }
+  .badge.status-inprogress { background: color-mix(in srgb, var(--yellow) 22%, transparent); color: var(--yellow); }
+  .badge.status-done, .badge.status-resolved { background: color-mix(in srgb, var(--teal) 20%, transparent); color: var(--teal); }
+  .badge.status-submitted { background: color-mix(in srgb, var(--pink) 18%, transparent); color: var(--pink); }
+  .badge.carryover { background: color-mix(in srgb, var(--coral) 22%, transparent); color: var(--coral); }
   .ic-meta { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
   .ic-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  .btn { font-weight: 700; font-size: 12.5px; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); cursor: pointer; }
-  .btn:hover { border-color: var(--gold); color: var(--gold); }
-  .btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .btn { font-weight: 700; font-size: 12.5px; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--rule); background: var(--bg); color: var(--ink); cursor: pointer; }
+  .btn:hover { border-color: var(--purple); color: var(--purple); }
+  .btn.primary { background: linear-gradient(90deg, var(--teal), var(--purple)); color: #fff; border-color: transparent; }
   .btn.primary:hover { opacity: 0.9; color: #fff; }
+  .btn.kyle { background: color-mix(in srgb, var(--coral) 16%, var(--surface)); border-color: var(--coral); color: var(--coral); }
+  .btn.matt { background: color-mix(in srgb, var(--teal) 16%, var(--surface)); border-color: var(--teal); color: var(--teal); }
 
   .checklist { list-style: none; margin: 10px 0 0; padding: 10px 0 0; border-top: 1px dashed var(--rule); }
-  .checklist li { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 13.5px; }
+  .checklist li { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13.5px; }
+  .checklist li input { width: 17px; height: 17px; accent-color: var(--purple); }
   .checklist li label.done { text-decoration: line-through; color: var(--ink-soft); }
 
-  .add-form { background: var(--surface); border: 1px dashed var(--rule); border-radius: 12px; padding: 14px 16px; margin-top: 6px; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); align-items: end; }
+  .add-form { background: var(--surface); border: 2px dashed var(--rule); border-radius: 16px; padding: 16px 18px; margin-top: 6px; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); align-items: end; }
   .add-form label { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); font-weight: 700; margin-bottom: 4px; }
-  .add-form input, .add-form select { width: 100%; padding: 7px 9px; border-radius: 7px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
+  .add-form input, .add-form select { width: 100%; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
   .add-form .full { grid-column: 1 / -1; }
 
   .fin-summary-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .fin-summary { width: 100%; min-width: 480px; border-collapse: collapse; margin: 14px 0 26px; font-size: 14px; }
-  .fin-summary th, .fin-summary td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+  .fin-summary th, .fin-summary td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--rule); }
   .fin-summary th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
   .fin-summary td.num { font-family: "SF Mono", ui-monospace, Menlo, monospace; text-align: right; }
-  .fin-summary tr.total td { font-weight: 700; border-top: 2px solid var(--rule); border-bottom: none; }
+  .fin-summary tr.total td { font-weight: 800; border-top: 2px solid var(--purple); border-bottom: none; }
+
+  .month-block { margin-bottom: 28px; }
+  .month-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .month-head .mh-pill { font-family: Georgia, serif; font-weight: 700; font-size: 19px; padding: 6px 16px; border-radius: 999px; color: #fff; background: linear-gradient(90deg, var(--purple), var(--pink)); }
+  .month-block.past .mh-pill { background: linear-gradient(90deg, var(--coral), var(--yellow)); }
+  .month-head .mh-note { font-size: 12.5px; color: var(--ink-soft); }
+  .month-row { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 2px solid var(--rule); border-radius: 14px; padding: 12px 16px; margin-bottom: 8px; }
+  .month-row input { width: 20px; height: 20px; accent-color: var(--teal); flex-shrink: 0; }
+  .month-row .mr-name { font-weight: 700; font-size: 14.5px; }
+  .month-row .mr-name.done { text-decoration: line-through; color: var(--ink-soft); }
+  .month-row .mr-meta { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  .month-row .mr-main { flex: 1; }
 
   @media (max-width: 640px) {
     .page { padding: 0 14px 90px; }
     .topbar { padding: 16px 0 8px; }
-    .whoami select, #whoSelect { font-size: 16px; padding: 9px 10px; }
-    .tab-btn { padding: 10px 11px 9px; font-size: 13.5px; }
-    .item-card, .feature-card, .confirm-card { padding: 13px 14px; }
+    .whoami select, #viewSelect { font-size: 15px; padding: 9px 10px; }
+    .tab-btn { padding: 9px 13px; font-size: 13px; }
+    .item-card, .feature-card, .confirm-card { padding: 14px 15px; }
     .add-form { grid-template-columns: 1fr 1fr; }
     .add-form input, .add-form select { font-size: 16px; padding: 9px 10px; }
     .btn { padding: 9px 13px; font-size: 13px; }
+    .month-head .mh-pill { font-size: 16px; padding: 5px 13px; }
   }
 
   .payment-log { list-style: none; margin: 10px 0 0; padding: 0; }
-  .payment-log li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px dotted var(--rule); font-size: 13.5px; }
+  .payment-log li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px dotted var(--rule); font-size: 13.5px; }
   .payment-log li:first-child { border-top: none; }
 
   .empty { color: var(--ink-soft); font-size: 13.5px; font-style: italic; padding: 8px 0; }
-  .banner { border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 18px; border: 1px solid; }
-  .banner.preview { background: color-mix(in srgb, var(--gold) 8%, var(--surface)); border-color: color-mix(in srgb, var(--gold) 35%, var(--rule)); color: var(--ink); }
+  .banner { border-radius: 14px; padding: 11px 15px; font-size: 13px; margin-bottom: 18px; border: 2px solid; }
+  .banner.preview { background: color-mix(in srgb, var(--yellow) 10%, var(--surface)); border-color: color-mix(in srgb, var(--yellow) 45%, var(--rule)); color: var(--ink); }
   footer { border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 30px; font-size: 12px; color: var(--ink-soft); }
 </style>
 
 <div class="page">
   <div class="topbar">
     <div>
-      <h1 class="display">Apartment HQ</h1>
-      <div class="sub">Kyle &amp; Matt — chores, building management, communal items, finances</div>
+      <h1 class="display">🏠 Apartment HQ</h1>
+      <div class="sub">Kyle &amp; Matt — chores, building management, shopping, finances</div>
     </div>
     <div class="whoami">
       <span id="modePill" class="mode-pill preview">Preview mode</span>
-      <select id="whoSelect">
-        <option value="Kyle">I'm Kyle</option>
-        <option value="Matt">I'm Matt</option>
+      <select id="viewSelect">
+        <option value="Both">Kyle &amp; Matt Chores</option>
+        <option value="Kyle">Kyle Chores</option>
+        <option value="Matt">Matt Chores</option>
       </select>
     </div>
   </div>
 
   <div id="previewBanner" class="banner preview" style="display:none;">
-    <b>Preview mode.</b> This is running on sample data in your browser — nothing you click here saves anywhere yet. Deploy the Apps Script backend and paste the URL into <span class="mono">API_URL</span> at the top of this file's script to make it live and shared with Matt.
+    <b>Preview mode.</b> This is running on sample data in your browser — nothing you click here saves anywhere yet.
   </div>
 
   <div class="tabs-nav">
-    <button class="tab-btn active" data-tab="chores">Chores</button>
-    <button class="tab-btn" data-tab="management">Building Management</button>
-    <button class="tab-btn" data-tab="communal">Communal Items</button>
-    <button class="tab-btn" data-tab="finances">Finances</button>
+    <button class="tab-btn active" data-tab="chores">🧹 Ongoing Chores</button>
+    <button class="tab-btn" data-tab="refresh">🛋️ 2026 Apartment Refresh</button>
+    <button class="tab-btn" data-tab="management">🏢 Building Management</button>
+    <button class="tab-btn" data-tab="communal">🛒 Communal Shopping List</button>
+    <button class="tab-btn" data-tab="finances">💰 Apartment Finances</button>
   </div>
 
+  <!-- ===================== ONGOING CHORES ===================== -->
   <div class="tab-panel active" id="tab-chores">
-    <div id="refreshFeature"></div>
-    <div class="section-head"><h2 class="display">Recurring &amp; One-off Chores</h2></div>
-    <p class="section-sub">Grouped by area. Tap a chore to see its checklist and mark it done.</p>
-    <div id="choresBySection"></div>
+    <div class="section-head"><h2 class="display">Ongoing Chores</h2></div>
+    <p class="section-sub">This month on top, last month right below — anything you didn't check off carries over so it doesn't get lost.</p>
+    <div id="monthlyChores"></div>
+    <div id="oneOffChores"></div>
     <div class="section-group">
       <h4>Add a chore</h4>
       <div class="add-form">
@@ -156,6 +183,13 @@
         <div><button class="btn primary" onclick="addChore()">Add Chore</button></div>
       </div>
     </div>
+  </div>
+
+  <!-- ===================== 2026 APARTMENT REFRESH ===================== -->
+  <div class="tab-panel" id="tab-refresh">
+    <div class="section-head"><h2 class="display">2026 Apartment Refresh</h2></div>
+    <p class="section-sub">The big one — furniture swap, wallpaper, the whole living room reset.</p>
+    <div id="refreshFeature"></div>
   </div>
 
   <div class="tab-panel" id="tab-management">
@@ -176,8 +210,9 @@
     </div>
   </div>
 
+  <!-- ===================== COMMUNAL SHOPPING LIST ===================== -->
   <div class="tab-panel" id="tab-communal">
-    <div class="section-head"><h2 class="display">Communal Items</h2></div>
+    <div class="section-head"><h2 class="display">Communal Shopping List</h2></div>
     <p class="section-sub">Shared consumables — paper towels, toilet paper, cleaning products, trash bags. Next-due is estimated from your typical buying cadence.</p>
     <div id="communalList" class="card-grid"></div>
     <div class="section-group">
@@ -191,10 +226,11 @@
     </div>
   </div>
 
+  <!-- ===================== APARTMENT FINANCES ===================== -->
   <div class="tab-panel" id="tab-finances">
-    <div class="section-head"><h2 class="display">Finances</h2></div>
+    <div class="section-head"><h2 class="display">Apartment Finances</h2></div>
     <p class="section-sub">Recurring bills and the running Kyle-vs-Matt total, computed live from every payment logged below.</p>
-    <table class="fin-summary" id="finSummaryTable"></table>
+    <div class="fin-summary-wrap"><table class="fin-summary" id="finSummaryTable"></table></div>
     <div class="section-group">
       <h4>Log a payment</h4>
       <div class="add-form">
@@ -313,7 +349,6 @@ async function fetchJsonWithRetry(url, options, attempts) {
 
 async function apiWrite(sheet, action, payload) {
   if (!API_URL) {
-    // Preview mode: mutate in-memory only, nothing persists on reload.
     applyLocalMutation(sheet, action, payload);
     return { ok: true, local: true };
   }
@@ -335,102 +370,138 @@ function applyLocalMutation(sheet, action, payload) {
   } else if (action === 'update') {
     const row = rows.find(r => String(r.ID) === String(payload.id));
     if (row) Object.assign(row, payload.data);
+  } else if (action === 'delete') {
+    const idx = rows.findIndex(r => String(r.ID) === String(payload.id));
+    if (idx !== -1) rows.splice(idx, 1);
   }
 }
 
-function who() { return document.getElementById('whoSelect').value; }
+// ============================== VIEW FILTER ==============================
+function getView() { return localStorage.getItem('apartmentHQ_view') || 'Both'; }
+function visibleForView(assignedTo) {
+  const view = getView();
+  if (view === 'Both') return true;
+  return assignedTo === view || assignedTo === 'Everyone';
+}
+// Who a checked-off item should be attributed to: the chore's own assignee if it's a
+// specific person, otherwise (Everyone) fall back to the active view if it's Kyle/Matt.
+function attributionFor(assignedTo) {
+  if (assignedTo === 'Kyle' || assignedTo === 'Matt') return assignedTo;
+  const view = getView();
+  return view === 'Both' ? 'Everyone' : view;
+}
 
 // ============================== HELPERS ==============================
 function byParent(rows, type, id) { return rows.filter(r => r.ParentType === type && String(r.ParentID) === String(id)); }
 function isTrue(v) { return v === true || v === 'TRUE' || v === 'true'; }
 function fmtDate(d) { if (!d || d === 'TBD') return d || '—'; return d; }
-function lastCompleted(choreId) {
-  const rows = DATA.History.filter(h => String(h.ChoreID) === String(choreId));
-  if (!rows.length) return null;
-  rows.sort((a, b) => (a.CompletedDate < b.CompletedDate ? 1 : -1));
-  return rows[0];
-}
 function statusClass(s) { return 'status-' + String(s || '').toLowerCase().replace(/\s+/g, ''); }
+function personClass(name) { return 'person-' + String(name || '').toLowerCase(); }
 
-// ============================== RENDER: CHORES ==============================
-function renderChores() {
-  const refreshChore = DATA.Chores.find(c => c.ID === REFRESH_CHORE_ID);
-  const featureEl = document.getElementById('refreshFeature');
-  featureEl.innerHTML = '';
-  if (refreshChore) {
-    const items = byParent(DATA.ChecklistItems, 'Chore', refreshChore.ID).sort((a, b) => (a.SortOrder || 0) - (b.SortOrder || 0));
-    const doneCount = items.filter(i => isTrue(i.Done)).length;
-    const pct = items.length ? Math.round((doneCount / items.length) * 100) : 0;
-    const card = document.createElement('div');
-    card.className = 'feature-card';
-    card.innerHTML = `
-      <div class="fc-eyebrow">Flagship Project</div>
-      <h3>${refreshChore.Name}</h3>
-      <div class="fc-meta">${refreshChore.Section} · Assigned ${refreshChore.AssignedTo} · Timeline ${fmtDate(refreshChore.TimelineStart)} → ${fmtDate(refreshChore.TimelineDue)} · <span class="badge status-${statusClass(refreshChore.Status)}">${refreshChore.Status}</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <div class="progress-label">${doneCount} of ${items.length} steps done</div>
-      <ul class="timeline">
-        ${items.map(i => `
-          <li>
-            <input type="checkbox" class="ti-check" ${isTrue(i.Done) ? 'checked' : ''} onchange="toggleChecklist('${i.ID}', this.checked)">
-            <div>
-              <div class="ti-text ${isTrue(i.Done) ? 'done' : ''}">${i.ItemText}</div>
-              <div class="ti-meta">${i.GoalDate ? `<span class="goal-badge">Goal: ${fmtDate(i.GoalDate)}</span>` : ''} ${i.AssignedTo ? ' · ' + i.AssignedTo : ''}</div>
-            </div>
-          </li>`).join('')}
-      </ul>`;
-    featureEl.appendChild(card);
-  }
-
-  const container = document.getElementById('choresBySection');
-  container.innerHTML = '';
-  const chores = DATA.Chores.filter(c => c.ID !== REFRESH_CHORE_ID);
-  SECTIONS.forEach(section => {
-    const inSection = chores.filter(c => c.Section === section);
-    if (!inSection.length) return;
-    const group = document.createElement('div');
-    group.className = 'section-group';
-    group.innerHTML = `<h4>${section}</h4><div class="card-grid" id="chore-sec-${section.replace(/\s+/g,'-')}"></div>`;
-    container.appendChild(group);
-    const grid = group.querySelector('.card-grid');
-    inSection.forEach(chore => grid.appendChild(renderChoreCard(chore)));
+function monthInfo(offset) {
+  const d = new Date();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + offset);
+  return { year: d.getFullYear(), month: d.getMonth(), label: d.toLocaleString('en-US', { month: 'long', year: 'numeric' }) };
+}
+function historyEntryInMonth(choreId, mInfo) {
+  return DATA.History.find(h => {
+    if (String(h.ChoreID) !== String(choreId)) return false;
+    if (!h.CompletedDate) return false;
+    const hd = new Date(h.CompletedDate + 'T00:00:00');
+    return hd.getFullYear() === mInfo.year && hd.getMonth() === mInfo.month;
   });
 }
+function monthDateStamp(mInfo, isCurrent) {
+  if (isCurrent) return new Date().toISOString().slice(0, 10);
+  return `${mInfo.year}-${String(mInfo.month + 1).padStart(2, '0')}-01`;
+}
 
-function renderChoreCard(chore) {
-  const items = byParent(DATA.ChecklistItems, 'Chore', chore.ID).sort((a, b) => (a.SortOrder || 0) - (b.SortOrder || 0));
-  const last = lastCompleted(chore.ID);
+// ============================== RENDER: ONGOING CHORES (monthly) ==============================
+function renderOngoingChores() {
+  const recurring = DATA.Chores.filter(c => c.Type === 'Recurring' && visibleForView(c.AssignedTo));
+  const current = monthInfo(0);
+  const previous = monthInfo(-1);
+  const container = document.getElementById('monthlyChores');
+  container.innerHTML = '';
+  container.appendChild(renderMonthBlock(current, recurring, true));
+  container.appendChild(renderMonthBlock(previous, recurring, false));
+
+  const oneOffs = DATA.Chores.filter(c => c.Type === 'One-off' && c.ID !== REFRESH_CHORE_ID && visibleForView(c.AssignedTo));
+  const el = document.getElementById('oneOffChores');
+  el.innerHTML = '';
+  if (oneOffs.length) {
+    const group = document.createElement('div');
+    group.className = 'section-group';
+    group.innerHTML = '<h4>One-off Chores</h4><div class="card-grid" id="oneOffGrid"></div>';
+    el.appendChild(group);
+    const grid = group.querySelector('#oneOffGrid');
+    oneOffs.forEach(chore => grid.appendChild(renderOneOffCard(chore)));
+  }
+}
+
+function renderMonthBlock(mInfo, chores, isCurrent) {
+  const block = document.createElement('div');
+  block.className = 'month-block' + (isCurrent ? '' : ' past');
+  const rows = chores.map(chore => {
+    const entry = historyEntryInMonth(chore.ID, mInfo);
+    const done = !!entry;
+    const carryover = !isCurrent && !done;
+    return `
+      <div class="month-row">
+        <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleMonthlyChore('${chore.ID}', ${mInfo.year}, ${mInfo.month}, ${isCurrent}, this.checked)">
+        <div class="mr-main">
+          <div class="mr-name ${done ? 'done' : ''}">${chore.Name}</div>
+          <div class="mr-meta">${chore.Section} · ${chore.Cadence || ''} <span class="badge ${personClass(chore.AssignedTo)}" style="margin-left:6px;">${chore.AssignedTo}</span>${carryover ? ' <span class="badge carryover">Carryover</span>' : ''}</div>
+        </div>
+      </div>`;
+  }).join('');
+  block.innerHTML = `
+    <div class="month-head"><span class="mh-pill">${mInfo.label}</span>${!isCurrent ? '<span class="mh-note">Anything still unchecked here rolled forward</span>' : ''}</div>
+    ${rows || '<div class="empty">No recurring chores in this view.</div>'}`;
+  return block;
+}
+
+async function toggleMonthlyChore(choreId, year, month, isCurrent, checked) {
+  const mInfo = { year, month };
+  const chore = DATA.Chores.find(c => String(c.ID) === String(choreId));
+  if (checked) {
+    const by = attributionFor(chore.AssignedTo);
+    const date = monthDateStamp(mInfo, isCurrent);
+    const res = await apiWrite('History', 'append', { data: { ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: date, Notes: '' } });
+    DATA.History.push(res.row || { ID: String(Date.now()), ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: date, Notes: '' });
+  } else {
+    const entry = historyEntryInMonth(choreId, mInfo);
+    if (entry) {
+      await apiWrite('History', 'delete', { id: entry.ID });
+      DATA.History = DATA.History.filter(h => String(h.ID) !== String(entry.ID));
+    }
+  }
+  renderOngoingChores();
+}
+
+function renderOneOffCard(chore) {
+  const last = DATA.History.filter(h => String(h.ChoreID) === String(chore.ID)).sort((a, b) => (a.CompletedDate < b.CompletedDate ? 1 : -1))[0];
   const el = document.createElement('div');
   el.className = 'item-card';
   el.innerHTML = `
     <div class="ic-head">
       <div class="ic-title">${chore.Name}</div>
-      <span class="badge assign">${chore.AssignedTo}</span>
+      <span class="badge ${personClass(chore.AssignedTo)}">${chore.AssignedTo}</span>
     </div>
-    <div class="ic-meta">${chore.Type}${chore.Cadence ? ' · ' + chore.Cadence : ''} <span class="badge ${statusClass(chore.Status)}">${chore.Status}</span></div>
+    <div class="ic-meta">${chore.Section} <span class="badge ${statusClass(chore.Status)}">${chore.Status}</span></div>
     <div class="ic-meta">${last ? `Last done: ${fmtDate(last.CompletedDate)} by ${last.CompletedBy}` : 'Never logged yet'}</div>
-    ${items.length ? `<ul class="checklist">${items.map(i => `
-      <li><input type="checkbox" ${isTrue(i.Done) ? 'checked' : ''} onchange="toggleChecklist('${i.ID}', this.checked)"><label class="${isTrue(i.Done) ? 'done' : ''}">${i.ItemText}</label></li>`).join('')}</ul>` : ''}
-    <div class="ic-actions">
-      <button class="btn primary" onclick="markChoreDone('${chore.ID}')">Mark Done</button>
-    </div>`;
+    <div class="ic-actions"><button class="btn primary" onclick="markOneOffDone('${chore.ID}')">Mark Done</button></div>`;
   return el;
 }
 
-async function toggleChecklist(id, done) {
-  await apiWrite('ChecklistItems', 'update', { id, data: { Done: done ? 'TRUE' : 'FALSE' } });
-  const row = DATA.ChecklistItems.find(r => String(r.ID) === String(id));
-  if (row) row.Done = done ? 'TRUE' : 'FALSE';
-  renderChores();
-}
-
-async function markChoreDone(choreId) {
-  const by = who();
+async function markOneOffDone(choreId) {
   const chore = DATA.Chores.find(c => String(c.ID) === String(choreId));
+  const by = attributionFor(chore.AssignedTo);
   const today = new Date().toISOString().slice(0, 10);
   const res = await apiWrite('History', 'append', { data: { ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' } });
   DATA.History.push(res.row || { ID: String(Date.now()), ChoreID: choreId, ChoreName: chore.Name, CompletedBy: by, CompletedDate: today, Notes: '' });
-  renderChores();
+  renderOngoingChores();
 }
 
 async function addChore() {
@@ -448,7 +519,46 @@ async function addChore() {
   DATA.Chores.push(res.row || Object.assign({ ID: String(Date.now()) }, data));
   document.getElementById('chore-name').value = '';
   document.getElementById('chore-cadence').value = '';
-  renderChores();
+  renderOngoingChores();
+}
+
+// ============================== RENDER: 2026 APARTMENT REFRESH ==============================
+function renderRefreshTab() {
+  const refreshChore = DATA.Chores.find(c => c.ID === REFRESH_CHORE_ID);
+  const featureEl = document.getElementById('refreshFeature');
+  featureEl.innerHTML = '';
+  if (!refreshChore) { featureEl.innerHTML = '<div class="empty">Nothing here yet.</div>'; return; }
+  const items = byParent(DATA.ChecklistItems, 'Chore', refreshChore.ID)
+    .filter(i => visibleForView(i.AssignedTo || 'Everyone'))
+    .sort((a, b) => (a.SortOrder || 0) - (b.SortOrder || 0));
+  const doneCount = items.filter(i => isTrue(i.Done)).length;
+  const pct = items.length ? Math.round((doneCount / items.length) * 100) : 0;
+  const card = document.createElement('div');
+  card.className = 'feature-card';
+  card.innerHTML = `
+    <div class="fc-eyebrow">Flagship Project</div>
+    <h3>${refreshChore.Name}</h3>
+    <div class="fc-meta">${refreshChore.Section} · Assigned <span class="badge ${personClass(refreshChore.AssignedTo)}">${refreshChore.AssignedTo}</span> · Timeline ${fmtDate(refreshChore.TimelineStart)} → ${fmtDate(refreshChore.TimelineDue)} · <span class="badge status-${statusClass(refreshChore.Status)}">${refreshChore.Status}</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="progress-label">${doneCount} of ${items.length} steps done</div>
+    <ul class="timeline">
+      ${items.map(i => `
+        <li>
+          <input type="checkbox" class="ti-check" ${isTrue(i.Done) ? 'checked' : ''} onchange="toggleChecklist('${i.ID}', this.checked)">
+          <div>
+            <div class="ti-text ${isTrue(i.Done) ? 'done' : ''}">${i.ItemText}</div>
+            <div class="ti-meta">${i.GoalDate ? `<span class="goal-badge">Goal: ${fmtDate(i.GoalDate)}</span>` : ''} ${i.AssignedTo ? ' · ' + i.AssignedTo : ''}</div>
+          </div>
+        </li>`).join('')}
+    </ul>`;
+  featureEl.appendChild(card);
+}
+
+async function toggleChecklist(id, done) {
+  await apiWrite('ChecklistItems', 'update', { id, data: { Done: done ? 'TRUE' : 'FALSE' } });
+  const row = DATA.ChecklistItems.find(r => String(r.ID) === String(id));
+  if (row) row.Done = done ? 'TRUE' : 'FALSE';
+  renderRefreshTab();
 }
 
 // ============================== RENDER: MANAGEMENT ==============================
@@ -500,7 +610,7 @@ async function addManagementItem() {
   renderManagement();
 }
 
-// ============================== RENDER: COMMUNAL ==============================
+// ============================== RENDER: COMMUNAL SHOPPING LIST ==============================
 function nextDueInfo(item) {
   if (!item.LastBoughtDate || !item.TypicalCadenceDays) return { label: 'No purchase logged yet', cls: '' };
   const last = new Date(item.LastBoughtDate);
@@ -508,9 +618,9 @@ function nextDueInfo(item) {
   const due = new Date(last.getTime() + days * 86400000);
   const today = new Date();
   const diffDays = Math.round((due - today) / 86400000);
-  if (diffDays < 0) return { label: `Overdue by ${Math.abs(diffDays)}d`, cls: 'color:var(--red);font-weight:700;' };
-  if (diffDays <= 5) return { label: `Due in ${diffDays}d`, cls: 'color:var(--gold);font-weight:700;' };
-  return { label: `Due in ${diffDays}d`, cls: 'color:var(--teal);' };
+  if (diffDays < 0) return { label: `Overdue by ${Math.abs(diffDays)}d`, cls: 'color:var(--coral);font-weight:800;' };
+  if (diffDays <= 5) return { label: `Due in ${diffDays}d`, cls: 'color:var(--yellow);font-weight:800;' };
+  return { label: `Due in ${diffDays}d`, cls: 'color:var(--teal);font-weight:700;' };
 }
 
 function renderCommunal() {
@@ -521,16 +631,18 @@ function renderCommunal() {
     const card = document.createElement('div');
     card.className = 'item-card';
     card.innerHTML = `
-      <div class="ic-head"><div class="ic-title">${item.ItemName}</div><span class="badge assign">${item.Section}</span></div>
+      <div class="ic-head"><div class="ic-title">${item.ItemName}</div><span class="badge person-everyone">${item.Section}</span></div>
       <div class="ic-meta">${item.LastBoughtDate ? `Last bought ${fmtDate(item.LastBoughtDate)} by ${item.LastBoughtBy}` : 'Never bought yet'}</div>
       <div class="ic-meta" style="${due.cls}">${due.label}</div>
-      <div class="ic-actions"><button class="btn primary" onclick="markBought('${item.ID}')">Mark Bought</button></div>`;
+      <div class="ic-actions">
+        <button class="btn kyle" onclick="markBought('${item.ID}', 'Kyle')">Kyle bought it</button>
+        <button class="btn matt" onclick="markBought('${item.ID}', 'Matt')">Matt bought it</button>
+      </div>`;
     el.appendChild(card);
   });
 }
 
-async function markBought(id) {
-  const by = who();
+async function markBought(id, by) {
   const today = new Date().toISOString().slice(0, 10);
   const item = DATA.CommunalItems.find(r => String(r.ID) === String(id));
   await apiWrite('CommunalItemHistory', 'append', { data: { ItemName: item.ItemName, BoughtBy: by, Date: today, Price: '', Notes: '' } });
@@ -555,7 +667,7 @@ async function addCommunalItem() {
   renderCommunal();
 }
 
-// ============================== RENDER: FINANCES ==============================
+// ============================== RENDER: APARTMENT FINANCES ==============================
 function renderFinances() {
   const table = document.getElementById('finSummaryTable');
   const bills = DATA.Bills.map(b => b.BillName);
@@ -616,16 +728,21 @@ function initTabs() {
 }
 
 function renderAll() {
-  renderChores();
+  renderOngoingChores();
+  renderRefreshTab();
   renderManagement();
   renderCommunal();
   renderFinances();
 }
 
 (async function init() {
-  const savedWho = localStorage.getItem('apartmentHQ_whoami');
-  if (savedWho) document.getElementById('whoSelect').value = savedWho;
-  document.getElementById('whoSelect').addEventListener('change', e => localStorage.setItem('apartmentHQ_whoami', e.target.value));
+  const savedView = localStorage.getItem('apartmentHQ_view');
+  if (savedView) document.getElementById('viewSelect').value = savedView;
+  document.getElementById('viewSelect').addEventListener('change', e => {
+    localStorage.setItem('apartmentHQ_view', e.target.value);
+    renderOngoingChores();
+    renderRefreshTab();
+  });
   document.getElementById('pay-date').value = new Date().toISOString().slice(0, 10);
   initSectionSelects();
   initTabs();
