@@ -259,7 +259,7 @@
         <div><label>Bill</label><select id="pay-bill" onchange="onBillChange()"></select></div>
         <div><label>Amount</label><input id="pay-amount" type="number" step="0.01" placeholder="0.00"></div>
         <div><label>Paid By</label><select id="pay-by"><option>Kyle</option><option>Matt</option></select></div>
-        <div><label>Split</label><select id="pay-split"><option value="Shared 50/50">Shared 50/50 (they owe half)</option><option value="Own Share">Own Share (just my portion)</option><option value="Full Reimbursement">Full Reimbursement (they owe it all)</option></select></div>
+        <div><label>Split</label><select id="pay-split"><option value="Shared 50/50">Shared 50/50 (they owe half)</option><option value="Own Share">Own Share (just my portion)</option><option value="Full Reimbursement">Full Reimbursement (they owe it all)</option><option value="Settlement">Settlement (paying back what's owed)</option></select></div>
         <div><label>Date</label><input id="pay-date" type="date"></div>
         <div><label>Period</label><input id="pay-period" placeholder="e.g. 2026-09"></div>
         <div><button class="btn primary" onclick="addPayment()">Log Payment</button></div>
@@ -908,6 +908,11 @@ function computeBalance() {
   DATA.Payments.forEach(p => {
     const split = p.SplitType || 'Shared 50/50';
     const amt = parseFloat(p.AmountPaid) || 0;
+    if (split === 'Settlement') {
+      if (p.PaidBy === 'Kyle') kyleOwesMatt -= amt;
+      else if (p.PaidBy === 'Matt') mattOwesKyle -= amt;
+      return;
+    }
     let owed = 0;
     if (split === 'Shared 50/50') owed = amt / 2;
     else if (split === 'Full Reimbursement') owed = amt;
@@ -932,41 +937,60 @@ function renderFinances() {
   if (!periods.includes(cur)) periods.push(cur);
   periods.sort().reverse();
 
-  const periodsEl = document.getElementById('financePeriods');
-  periodsEl.innerHTML = periods.map(period => {
+  const completeMarkers = new Set(DATA.Payments.filter(p => p.BillName === 'Month Complete').map(p => p.Period));
+  const rentBill = DATA.Bills.find(b => b.BillName === 'Rent');
+  const rentTotal = rentBill ? parseFloat(rentBill.TypicalAmount) || 0 : 0;
+  const rentHalf = rentTotal ? (rentTotal / 2).toFixed(2) : '?';
+
+  function renderPeriodCard(period, isComplete) {
     const label = new Date(period + '-02').toLocaleString('en-US', { month: 'long', year: 'numeric' });
-    const rows = DATA.Bills.map(bill => {
-      const pays = DATA.Payments.filter(p => p.BillName === bill.BillName && p.Period === period);
-      if (bill.BillName === 'Rent') {
-        const total = parseFloat(bill.TypicalAmount) || 0;
-        const half = total ? (total / 2).toFixed(2) : '?';
-        const kylePaid = pays.find(p => p.PaidBy === 'Kyle');
-        const mattPaid = pays.find(p => p.PaidBy === 'Matt');
-        return `
-          <div class="period-row"><span class="pr-check ${kylePaid ? 'yes' : 'no'}">${kylePaid ? '✓' : '○'}</span><span class="pr-label">Rent — Kyle's share</span><span class="pr-amt">$${half}</span></div>
-          <div class="period-row"><span class="pr-check ${mattPaid ? 'yes' : 'no'}">${mattPaid ? '✓' : '○'}</span><span class="pr-label">Rent — Matt's share</span><span class="pr-amt">$${half}</span></div>`;
-      }
-      const entry = pays[0];
-      const label2 = entry ? `${bill.BillName} — ${entry.PaidBy} paid $${parseFloat(entry.AmountPaid).toFixed(2)}` : `${bill.BillName} — not logged yet`;
-      return `<div class="period-row"><span class="pr-check ${entry ? 'yes' : 'no'}">${entry ? '✓' : '○'}</span><span class="pr-label">${label2}</span></div>`;
-    }).join('');
-    return `<div class="period-card ${period === cur ? 'current' : ''}"><div class="pc-head">${label}${period === cur ? ' (current)' : ''}</div>${rows}</div>`;
-  }).join('');
+    const pays = DATA.Payments.filter(p => p.Period === period);
+    const kyleRent = pays.find(p => p.BillName === 'Rent' && p.PaidBy === 'Kyle');
+    const mattRent = pays.find(p => p.BillName === 'Rent' && p.PaidBy === 'Matt');
+    const elec = pays.find(p => p.BillName === 'Electricity');
+    const wifi = pays.find(p => p.BillName === 'Internet (Spectrum)' || /wifi|internet/i.test(p.BillName));
+    const rows = `
+      <div class="period-row"><span class="pr-check ${kyleRent ? 'yes' : 'no'}">${kyleRent ? '✓' : '○'}</span><span class="pr-label">Kyle Rent</span><span class="pr-amt">$${rentHalf}</span></div>
+      <div class="period-row"><span class="pr-check ${mattRent ? 'yes' : 'no'}">${mattRent ? '✓' : '○'}</span><span class="pr-label">Matt Rent</span><span class="pr-amt">$${rentHalf}</span></div>
+      <div class="period-row"><span class="pr-check ${elec ? 'yes' : 'no'}">${elec ? '✓' : '○'}</span><span class="pr-label">${elec ? `Electricity — ${elec.PaidBy} paid $${parseFloat(elec.AmountPaid).toFixed(2)}` : 'Electricity — not logged yet'}</span></div>
+      <div class="period-row"><span class="pr-check ${wifi ? 'yes' : 'no'}">${wifi ? '✓' : '○'}</span><span class="pr-label">${wifi ? `Wifi — ${wifi.PaidBy} paid $${parseFloat(wifi.AmountPaid).toFixed(2)}` : 'Wifi — not logged yet'}</span></div>`;
+    const action = isComplete
+      ? `<div class="ic-actions" style="margin-top:12px;"><span class="badge status-complete">All bills paid</span></div>`
+      : `<div class="ic-actions" style="margin-top:12px;"><button class="btn primary sm" onclick="markPeriodComplete('${period}')">✓ All Monthly Bills Paid</button></div>`;
+    return `<div class="period-card ${period === cur ? 'current' : ''}"><div class="pc-head">${label}${period === cur ? ' (current)' : ''}</div>${rows}${action}</div>`;
+  }
+
+  const openPeriods = periods.filter(p => !completeMarkers.has(p));
+  const completedPeriods = periods.filter(p => completeMarkers.has(p));
+  const periodsEl = document.getElementById('financePeriods');
+  periodsEl.innerHTML = `
+    <div class="section-group"><h4>Open Bills</h4>${openPeriods.length ? openPeriods.map(p => renderPeriodCard(p, false)).join('') : '<div class="empty">Nothing open.</div>'}</div>
+    <div class="section-group"><h4>Completed Bills</h4>${completedPeriods.length ? completedPeriods.map(p => renderPeriodCard(p, true)).join('') : '<div class="empty">No completed months yet.</div>'}</div>`;
 
   const billSelect = document.getElementById('pay-bill');
-  billSelect.innerHTML = DATA.Bills.map(b => `<option>${b.BillName}</option>`).join('');
+  billSelect.innerHTML = DATA.Bills.map(b => `<option>${b.BillName}</option>`).join('') + '<option>Settlement</option>';
   onBillChange();
   if (!document.getElementById('pay-period').value) document.getElementById('pay-period').value = cur;
 
   const log = document.getElementById('paymentLog');
-  const sorted = [...DATA.Payments].sort((a, b) => (a.DatePaid < b.DatePaid ? 1 : -1));
+  const sorted = [...DATA.Payments].filter(p => p.BillName !== 'Month Complete').sort((a, b) => (a.DatePaid < b.DatePaid ? 1 : -1));
   log.innerHTML = sorted.length ? sorted.map(p => `<li><span>${p.BillName} — ${p.PaidBy} <span class="badge person-everyone" style="font-size:9px;">${p.SplitType || 'Shared 50/50'}</span></span><span class="mono">$${parseFloat(p.AmountPaid || 0).toFixed(2)} · ${fmtDate(p.DatePaid)}</span></li>`).join('') : '<div class="empty">No payments logged yet.</div>';
 }
 
 function onBillChange() {
   const bill = document.getElementById('pay-bill').value;
   const splitSel = document.getElementById('pay-split');
-  if (splitSel) splitSel.value = bill === 'Rent' ? 'Own Share' : 'Shared 50/50';
+  if (splitSel) splitSel.value = bill === 'Rent' ? 'Own Share' : bill === 'Settlement' ? 'Settlement' : 'Shared 50/50';
+}
+
+async function markPeriodComplete(period) {
+  const data = { BillName: 'Month Complete', AmountPaid: '0', PaidBy: '', DatePaid: new Date().toISOString().slice(0, 10), Period: period, Notes: 'All bills settled for this month', SplitType: 'Marker' };
+  const res = await apiWrite('Payments', 'append', { data });
+  const row = res.row || Object.assign({ ID: String(Date.now()) }, data);
+  if (row.Period) row.Period = normPeriod(row.Period);
+  if (row.DatePaid) row.DatePaid = normDate(row.DatePaid);
+  DATA.Payments.push(row);
+  renderAll();
 }
 
 async function addPayment() {
